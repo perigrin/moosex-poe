@@ -2,7 +2,7 @@ use strict;
 use Test::More no_plan => 1;
 
 my $count         = 0;
-my $max_sessions  = 2000;
+my $max_sessions  = 30;
 my $half_sessions = int( $max_sessions / 2 );
 
 my %english = (
@@ -26,7 +26,7 @@ my %english = (
     );
 
     sub START {
-        $_[0]->yield('on_fork');
+        $_[0]->yield('fork');
         $poe_kernel->sig( 'INT',    'on_signal_handler' );
         $poe_kernel->sig( 'ZOMBIE', 'on_signal_handler' );
 
@@ -87,7 +87,7 @@ my %english = (
             }
 
             if ( ( $count < $half_sessions ) || ( rand() < 0.05 ) ) {
-                $poe_kernel->yield('on_fork');
+                $poe_kernel->yield('fork');
             }
             else {
                 ::diag $self->id . " has decided to die.  Bye!";

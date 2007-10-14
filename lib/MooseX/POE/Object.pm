@@ -7,7 +7,11 @@ use metaclass 'MooseX::POE::Meta::Class' =>
 
 use Moose;
 
-sub yield { shift; POE::Kernel->yield(@_) }
+sub get_session_id {
+    my ($self) = @_;
+    return $self->meta->get_meta_instance->get_session_id($self);
+}
+sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
 sub START { }
 sub STOP  { }

@@ -1,68 +1,77 @@
-#!/usr/bin/env perl
+#!/usr/bin/env perl -l
 
-# -module(tbray).
-# -export([start/2]).
 #
-# find_match("/ongoing/When/" ++ Last) ->
-#     case lists:member($., Last) of
-#         false -> 1;
-#         true -> 0
-#     end;
-# find_match(_) -> 0.
+# http://www.tbray.org/ongoing/When/200x/2007/09/20/Wide-Finder
 #
-# process_binary(Pid, Bin) ->
-#     spawn(fun() ->
-#         L = string:tokens(binary_to_list(Bin), "\n"),
-#         V = lists:foldl(
-#             fun(Line, Total) ->
-#                 Total + find_match(lists:nth(7, string:tokens(Line, " "))) end,
-#             0, L),
-#         Pid ! V
-#         end).
-#
-# split_on_newline(Bin, N, All) when size(Bin) < N ->
-#     All ++ [Bin];
-# split_on_newline(Bin, N, All) ->
-#     {_, <<C:8, _/binary>>} = split_binary(Bin, N),
-#     case C of
-#         $\n ->
-#           {B21, B22} = split_binary(Bin, N+1),
-#           split_on_newline(B22, N, All ++ [B21]);
-#         _ -> split_on_newline(Bin, N+1, All)
-#     end.
-# split_on_newline(Bin, N) when N == size(Bin) -> [Bin];
-# split_on_newline(Bin, N) -> split_on_newline(Bin, N, []).
-#
-# start(Num, Input) ->
-#     {ok, Data} = file:read_file(Input),
-#     Bins = split_on_newline(Data, size(Data) div Num),
-#     Me = self(),
-#     Pids = [process_binary(Me, B) || B <- Bins],
-#     lists:foldl(
-#         fun(_, Total) -> receive X -> Total + X end end,
-#         0, Pids).
 
-package TBEP;
-use MooseX::POE;
+#
+# Rather than Erlang (as was in here before) this is more based on the
+# Scala version of this code at
+# http://www.martin-probst.com/2007/09/24/wide-finder-in-scala/
+#
 
-sub START {
-    while (<>) {
-        $self->yield( process_binary => $_ );
+#
+# requires the data at http://www.tbray.org/tmp/o10k.ap
+#
+
+my %count = ();
+$|++;
+
+sub main {
+    die 'no file' unless -e 'ex/tbray.data';
+    Slurp->new( filename => 'ex/tbray.data');
+    POE::Kernel->run();
+}
+
+{
+
+    package Slurp;
+    use MooseX::POE;
+    use IO::File;
+    has filename => (
+        isa => 'Str',
+        is  => 'ro',
+    );
+
+    my $file;
+
+    sub START {
+        $file ||= IO::File->new( $_[0]->filename, 'r' );
+        shift->yield('loop');
     }
+
+    sub on_loop {
+        my ($self) = @_;
+        if ( defined( my $line = <$file> ) ) {
+            Count->new->yield( 'loop', $line );
+            $self->yield('loop');
+            return;
+        }
+        $self->yield('tally');
+    }
+
+    sub on_inc {
+        $count{ $_[ARG0] }++;
+    }
+
+    sub on_tally {
+        print "$count{$_}: $_"
+          for sort { $count{$b} <=> $count{$a} } keys %count;
+    }
+
 }
 
-sub on_process_binary {
-    my ($self, $line) = @_;
-    
+{
+
+    package Count;
+    use MooseX::POE;
+
+    sub on_loop {
+        my ( $self, $sender, $line ) = @_[ OBJECT, SENDER, ARG0 ];
+        POE::Kernel->post( $sender => 'inc', $1 )
+          if $line =~ qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|;
+    }
+
 }
 
-no MooseX::POE :
-
-  package MatchFinder;
-use MooseX::POE;
-
-sub on_find_match {
-
-}
-
-no MooseX::POE;
+main();

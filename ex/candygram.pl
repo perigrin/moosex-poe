@@ -1,4 +1,4 @@
-#!/usr/bin/env perl 
+#!/usr/bin/env perl -l
 
 # This is a little test program to see if we could implement
 # http://candygram.sourceforge.net/node6.html on MooseX::POE

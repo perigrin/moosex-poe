@@ -26,6 +26,11 @@ sub create_instance {
     return $instance;
 }
 
+sub get_session_id {
+    my ( $self, $instance ) = @_;
+    return $instance->{session}->ID;
+}
+
 sub get_slot_value {
     my ( $self, $instance, $slot_name ) = @_;
     return $instance->{session}->get_heap->{$slot_name};
