@@ -57,6 +57,10 @@ sub main {
     
 }
 
+# 
+# Implementation
+# 
+
 {
 
     package Candygram;
@@ -67,6 +71,10 @@ sub main {
     }
 
 }
+
+#
+# the Receiver object does all the real work
+#
 
 {
 
@@ -92,6 +100,10 @@ sub main {
         return if exists $self->handlers->{$state};
         $self->handlers->{$state} = $code;
     }
+
+#   This could be cleaned up a bunch by MooseX::AttributeHelpers on the 
+#   attributes above, but I didn't wan't to have a dependency
+#   for a example script
 
     sub receive {
         my $self = shift;
