@@ -8,7 +8,6 @@ use metaclass 'MooseX::POE::Meta::Class' =>
 use Moose;
 
 sub yield { shift; POE::Kernel->yield(@_) }
-sub post  { shift; POE::Kernel->post(@_) }
 
 sub START { }
 sub STOP  { }

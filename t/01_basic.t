@@ -40,5 +40,5 @@ use Test::More no_plan => 1;
 #    __PACKAGE__->meta->make_immutable;
 }
 
-my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 1 .. 300 );
+my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 1 .. 30 );
 POE::Kernel->run();
