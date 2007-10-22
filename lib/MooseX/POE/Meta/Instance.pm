@@ -93,6 +93,8 @@ so there is no user documentation provided.
 
 =item meta
 
+The metaclass accessor provided by C<Moose::Object>.
+
 =back
 
 =head1 DEPENDENCIES

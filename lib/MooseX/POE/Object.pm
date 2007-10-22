@@ -75,7 +75,7 @@ This document describes Moose::POE::Object version 0.0.1
   
 =head1 DESCRIPTION
 
-MooseX::POE::Object is a Moose wrapper around a POE::Session
+MooseX::POE::Object is a Moose::Object subclass that implements a POE::Session
 
 =head1 DEFAULT METHODS
 
@@ -83,9 +83,15 @@ MooseX::POE::Object is a Moose wrapper around a POE::Session
 
 =item get_session_id
 
+Get the internal Session ID, this is useful to hand to other POE aware functions.
+
 =item yield
 
+A cheap alias for POE::Kernel->yield() which will gurantee posting to the object's session.
+
 =item meta 
+
+The metaclass accessor provided by C<Moose::Object>.
 
 =back
 

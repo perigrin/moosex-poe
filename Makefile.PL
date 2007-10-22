@@ -6,8 +6,10 @@ name 'MooseX-POE';
 all_from 'lib/MooseX/POE.pm';
 
 # Specific dependencies
-requires 'Moose' => '0.26';
-requires 'POE'   => '0.9999';
+requires 'Moose'         => '0.26';
+requires 'POE'           => '0.9999';
+requires 'Sub::Name'     => undef;
+requires 'Sub::Exporter' => undef;
 
 build_requires 'Test::More' => '0.42';
 
