@@ -19,7 +19,7 @@ sub add_state_method {
     ( !$self->has_method($name) )
       || confess
       "Cannot add an augment method if a local method is already present";
-    $self->add_method( MooseX::POE::Meta::Method::Event->wrap() );
+    $self->add_method( $name => MooseX::POE::Meta::Method::State->wrap($method) );
 }
 
 #XXX: Ick we had to copy the entire thing from Class::MOP::Class

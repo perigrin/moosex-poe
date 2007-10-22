@@ -25,19 +25,20 @@ use Test::More no_plan => 1;
         $self->yield('inc');
     }
 
-    sub on_inc {
+    event inc => sub {
         my ($self) = $_[OBJECT];
         ::pass( $self->name . ': Inc ' . $self->count );
         $self->count( $self->count + 1 );
         $self->yield('inc') unless $self->count > 3;
-    }
+    };
 
     sub STOP {
         ::pass('Stopping');
     }
 
     no MooseX::POE;
-#    __PACKAGE__->meta->make_immutable;
+
+    #    __PACKAGE__->meta->make_immutable;
 }
 
 my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 1 .. 30 );
