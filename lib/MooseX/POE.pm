@@ -3,21 +3,44 @@ use strict;
 our $VERSION = 0.01;
 use Moose;
 use MooseX::POE::Meta::Class;
+use MooseX::POE::Meta::Method::State;
 use MooseX::POE::Object;
+use Sub::Name 'subname';
+{
+    my $CALLER;
+    my %exports = (
+        event => sub {
+            my $class = $CALLER;
+            return subname 'Moose::event' => sub ($&) {
+                my ( $name, $method ) = @_;
+                $class->meta->add_state_method( $name => $method );
+            };
+        },
+    );
 
-sub import {
-    my $CALLER = caller();
-    strict->import;
-    warnings->import;
+    my $exporter = Sub::Exporter::build_exporter(
+        {
+            exports => \%exports,
+            groups  => { default => [':all'] }
+        }
+    );
 
-    return if $CALLER eq 'main';
-    Moose::init_meta( $CALLER, 'MooseX::POE::Object',
-        'MooseX::POE::Meta::Class' );
-    Moose->import( { into => $CALLER } );
-    ## no critic
-    eval qq{package $CALLER; use POE; };
-    ## use critic
-    die $@ if $@;
+    sub import {
+        $CALLER = caller();
+        strict->import;
+        warnings->import;
+
+        return if $CALLER eq 'main';
+        Moose::init_meta( $CALLER, 'MooseX::POE::Object',
+            'MooseX::POE::Meta::Class' );
+        Moose->import( { into => $CALLER } );
+        ## no critic
+        eval qq{package $CALLER; use POE; };
+        ## use critic
+        die $@ if $@;
+
+        goto $exporter;
+    }
 }
 
 sub unimport {

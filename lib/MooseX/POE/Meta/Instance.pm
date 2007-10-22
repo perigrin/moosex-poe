@@ -14,9 +14,8 @@ sub create_instance {
         inline_states => { _start => sub { POE::Kernel->yield('START') }, },
         object_states => [
             $instance => {
-                map { /^on_(\w+)$/ ? ( $1 => $_ ) : ( $_ => $_ ); }
-                  grep { /^on_|^(?:START|STOP|CHILD|PARENT|DEFAULT)$/ }
-                  map  { $_->{name} }
+                map { $_->{name} => $_->{name} }
+                  grep { $_->{code}->isa('MooseX::POE::Meta::Method::State') }
                   $self->associated_metaclass->compute_all_applicable_methods
             },
         ],
@@ -89,6 +88,8 @@ so there is no user documentation provided.
 =item set_slot_value
 
 =item weaken_slot_value
+
+=item get_session_id
 
 =item meta
 

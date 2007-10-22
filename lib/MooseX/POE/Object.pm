@@ -81,6 +81,8 @@ MooseX::POE::Object is a Moose wrapper around a POE::Session
 
 =over
 
+=item get_session_id
+
 =item yield
 
 =item meta 

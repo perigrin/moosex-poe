@@ -1,7 +1,7 @@
 package MooseX::POE::Meta::Class;
 use strict;
 use Moose;
-
+use B 'svref_2object';
 extends qw(Moose::Meta::Class);
 
 sub initialize {
@@ -12,6 +12,47 @@ sub initialize {
         'instance_metaclass' => 'MooseX::POE::Meta::Instance',
         @_
     );
+}
+
+sub add_state_method {
+    my ( $self, $name, $method ) = @_;
+    ( !$self->has_method($name) )
+      || confess
+      "Cannot add an augment method if a local method is already present";
+    $self->add_method( MooseX::POE::Meta::Method::Event->wrap() );
+}
+
+#XXX: Ick we had to copy the entire thing from Class::MOP::Class
+#     because there was no easy way to subclass it
+sub get_method_map {
+    my $self = shift;
+    my $map  = $self->{'%!methods'};
+
+    my $class_name       = $self->name;
+    my $method_metaclass = $self->method_metaclass;
+
+    foreach my $symbol ( $self->list_all_package_symbols('CODE') ) {
+
+        # if the method starts with 'on_' we want our custom metaclass
+        $method_metaclass = 'MooseX::POE::Meta::Method::State'
+          if $symbol =~ /^on_|^(?:START|STOP|CHILD|PARENT|DEFAULT)$/;
+
+        my $code = $self->get_package_symbol( '&' . $symbol );
+
+        next
+          if exists $map->{$symbol}
+          && defined $map->{$symbol}
+          && $map->{$symbol}->body == $code;
+
+        my $gv = svref_2object($code)->GV;
+        next
+          if ( $gv->STASH->NAME || '' ) ne $class_name
+          && ( $gv->NAME || '' ) ne '__ANON__';
+
+        $map->{$symbol} = $method_metaclass->wrap($code);
+    }
+
+    return $map;
 }
 
 no Moose;
@@ -36,6 +77,10 @@ so there is no user documentation provided.
 =over
 
 =item initialize
+
+=item add_state_method
+
+=item get_method_map
 
 =item meta
 

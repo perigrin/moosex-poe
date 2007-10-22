@@ -14,12 +14,11 @@
 # requires the data at http://www.tbray.org/tmp/o10k.ap
 #
 
-my %count = ();
 $|++;
 
 sub main {
     die 'no file' unless -e 'ex/tbray.data';
-    Slurp->new( filename => 'ex/tbray.data');
+    Slurp->new( filename => 'ex/tbray.data' );
     POE::Kernel->run();
 }
 
@@ -33,6 +32,12 @@ sub main {
         is  => 'ro',
     );
 
+    has count => (
+        isa     => 'HashRef',
+        is      => 'rw',
+        default => sub { {} },
+    );
+
     my $file;
 
     sub START {
@@ -42,21 +47,29 @@ sub main {
 
     sub on_loop {
         my ($self) = @_;
-        if ( defined( my $line = <$file> ) ) {
-            Count->new->yield( 'loop', $line );
-            $self->yield('loop');
+        if ( not eof $file ) {
+            my @chunk;
+            push @chunk, <$file> for ( 0 .. 1 );
+            Count->new->yield( 'loop', \@chunk );
             return;
         }
         $self->yield('tally');
     }
 
     sub on_inc {
-        $count{ $_[ARG0] }++;
+        my $chunk = $_[ARG0];
+        my $count = $_[0]->count;
+        for ( keys %$chunk ) {
+            $count->{$_} += $chunk->{$_};
+        }
+        $_[0]->count($count);
     }
 
     sub on_tally {
-        print "$count{$_}: $_"
-          for sort { $count{$b} <=> $count{$a} } keys %count;
+        my $count = $_[OBJECT]->count;
+
+        print "$count->{$_}: $_"
+          for sort { $count->{$b} <=> $count->{$a} } keys %$count;
     }
 
 }
@@ -67,9 +80,16 @@ sub main {
     use MooseX::POE;
 
     sub on_loop {
-        my ( $self, $sender, $line ) = @_[ OBJECT, SENDER, ARG0 ];
-        POE::Kernel->post( $sender => 'inc', $1 )
-          if $line =~ qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|;
+        warn 'loop';
+        my ( $self, $sender, $chunk ) = @_[ OBJECT, SENDER, ARG0 ];
+        my $count = {};
+        for my $line (@$chunk) {
+            $count->{$1}++
+              if $line =~
+              qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
+        }
+        POE::Kernel->post( $sender => 'inc', $count );
+        POE::Kernel->post( $sender => 'loop' );
     }
 
 }
