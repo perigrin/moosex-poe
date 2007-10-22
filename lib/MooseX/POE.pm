@@ -6,6 +6,8 @@ use MooseX::POE::Meta::Class;
 use MooseX::POE::Meta::Method::State;
 use MooseX::POE::Object;
 use Sub::Name 'subname';
+use Sub::Exporter;
+
 {
     my $CALLER;
     my %exports = (
@@ -84,7 +86,7 @@ This document describes Moose::POE::Object version 0.0.1
         $self->yield('increment');
     }
 
-    sub increment {
+    event increment => sub {
         my ($self) = @_;
         $self->count( $self->count + 1 );
         $self->yield('increment') unless $self->count > 3;
@@ -99,27 +101,48 @@ This document describes Moose::POE::Object version 0.0.1
 
 MooseX::POE::Object is a Moose wrapper around a POE::Session.
 
+=head1 KEYWORDS
+
+=over
+
+=item event $name $subref
+
+Create an event handler named $name. You can also implicitly create 
+event handlers by using the 'on_' prefix, thus the example in the 
+synopsis could also be:
+
+    sub on_increment { 
+        my ($self) = @_;
+        $self->count($self->count + 1);
+        $self->yield('increment') unless $self->count > 3;
+    }
+    
+The 'on_' syntax is supported because it is the emerging standard set 
+by L<POE::Stage>.
+
+=back
+
 =head1 METHODS
 
 =over
 
 =item import
 
+Export the Moose Keywords as well as the C<event> keyword defined above.
+
 =item unimport
 
+Unexport the Moose Keywords as well as the C<event> keyword defined above.
+
 =item meta
+
+The metaclass accessor provided by C<Moose::Object>.
 
 =back
 
 =head1 DEPENDENCIES
 
-=for author to fill in:
-    A list of all the other modules that this module relies upon,
-    including any restrictions on versions, and an indication whether
-    the module is part of the standard Perl distribution, part of the
-    module's distribution, or must be installed separately. ]
-
-L<Moose>, L<POE>
+L<Moose>, L<POE>, L<Sub::Name>, L<Sub::Exporter>
 
 
 =head1 INCOMPATIBILITIES
