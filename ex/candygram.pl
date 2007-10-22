@@ -34,7 +34,7 @@
 sub main {
 
     sub proc_func {
-        my $r = $_[0]->reciever;
+        my $r = $_[0]->receiver;
         $r->add_handler( 'land_shark', \&shut_door );
         $r->add_handler( 'candygram',  \&open_door );
         while (<$r>) {
@@ -142,7 +142,7 @@ sub main {
         default    => sub { [] },
     );
 
-    has reciever => (
+    has receiver => (
         is      => 'ro',
         default => sub { Receiver->new() },
     );
@@ -160,7 +160,7 @@ sub main {
 
     sub send {
         my ( $self, $message ) = @_;
-        push @{ $self->reciever->mailbox }, [ $message, \@_ ];
+        push @{ $self->receiver->mailbox }, [ $message, \@_ ];
         $self->yield('loop');
     }
 
