@@ -1,5 +1,9 @@
 Revision history for Moose-POE-Object
 
+0.0.2 2007-10-23
+	  fix POD
+	  fix tests
+
 0.0.1  Thu Oct 11 16:58:27 2007
        Initial release.
 

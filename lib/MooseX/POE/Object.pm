@@ -2,7 +2,7 @@ package MooseX::POE::Object;
 use strict;
 our $VERSION = '0.0.1';
 
-use metaclass 'MooseX::POE::Meta::Class' =>
+use metaclass 'MooseX::Async::Meta::Class' =>
   ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
 
 use Moose;

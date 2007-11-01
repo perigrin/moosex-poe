@@ -1,9 +1,8 @@
 package MooseX::POE;
 use strict;
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 use Moose;
-use MooseX::POE::Meta::Class;
-use MooseX::POE::Meta::Method::State;
+use MooseX::Async::Meta::Class;
 use MooseX::POE::Object;
 use Sub::Name 'subname';
 use Sub::Exporter;
@@ -13,7 +12,7 @@ use Sub::Exporter;
     my %exports = (
         event => sub {
             my $class = $CALLER;
-            return subname 'Moose::event' => sub ($&) {
+            return subname 'MooseX::POE::event' => sub ($&) {
                 my ( $name, $method ) = @_;
                 $class->meta->add_state_method( $name => $method );
             };
@@ -34,7 +33,7 @@ use Sub::Exporter;
 
         return if $CALLER eq 'main';
         Moose::init_meta( $CALLER, 'MooseX::POE::Object',
-            'MooseX::POE::Meta::Class' );
+            'MooseX::Async::Meta::Class' );
         Moose->import( { into => $CALLER } );
         ## no critic
         eval qq{package $CALLER; use POE; };
@@ -43,25 +42,44 @@ use Sub::Exporter;
 
         goto $exporter;
     }
-}
 
-sub unimport {
-    goto &{ Moose->can('unimport') };
-}
+    sub unimport {
+        no strict 'refs';
+        my $class = caller();
 
+        # loop through the exports ...
+        foreach my $name ( keys %exports ) {
+
+            # if we find one ...
+            if ( defined &{ $class . '::' . $name } ) {
+                my $keyword = \&{ $class . '::' . $name };
+
+                # make sure it is from Moose
+                my $pkg_name =
+                  eval { svref_2object($keyword)->GV->STASH->NAME };
+                next if $@;
+                next if $pkg_name ne 'MooseX::POE';
+
+                # and if it is from Moose then undef the slot
+                delete ${ $class . '::' }{$name};
+            }
+        }
+
+        # now let Moose do the same thing
+        goto &{ Moose->can('unimport') };
+    }
+}
 no Moose;
 1;
 __END__
 
 =head1 NAME
 
-MooseX::POE::Object - The base class for MooseX::Poe
-
+MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes Moose::POE::Object version 0.0.1
-
+This document describes Moose::POE::Object version 0.0.2
 
 =head1 SYNOPSIS
 

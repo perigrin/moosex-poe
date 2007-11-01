@@ -1,58 +1,7 @@
-package MooseX::POE::Meta::Instance;
+package MooseX::Async::Meta::Method::State;
 use strict;
 use Moose;
-use POE;
-
-extends 'Moose::Meta::Instance';
-
-sub create_instance {
-    my $self  = shift;
-    my $class = $self->associated_metaclass->name;
-
-    my $instance = $self->bless_instance_structure( {} );
-    $instance->{session} = POE::Session->create(
-        inline_states => { _start => sub { POE::Kernel->yield('START') }, },
-        object_states => [
-            $instance => {
-                map { $_->{name} => $_->{name} }
-                  grep { $_->{code}->isa('MooseX::Async::Meta::Method::State') }
-                  $self->associated_metaclass->compute_all_applicable_methods
-            },
-        ],
-        args => [$instance],
-        heap => {},
-    );
-    return $instance;
-}
-
-sub get_session_id {
-    my ( $self, $instance ) = @_;
-    return $instance->{session}->ID;
-}
-
-sub get_slot_value {
-    my ( $self, $instance, $slot_name ) = @_;
-    return $instance->{session}->get_heap->{$slot_name};
-}
-
-sub set_slot_value {
-    my ( $self, $instance, $slot_name, $value ) = @_;
-    $instance->{session}->get_heap->{$slot_name} = $value;
-}
-
-sub is_slot_initialized {
-    my ( $self, $instance, $slot_name, $value ) = @_;
-    exists $instance->{session}->get_heap->{$slot_name} ? 1 : 0;
-}
-
-sub weaken_slot_value {
-    confess "Write me";
-}
-
-sub inline_slot_access {
-    my ( $self, $instance, $slot_name ) = @_;
-    sprintf "%s->{session}->get_heap->{%s}", $instance, $slot_name;
-}
+extends qw(Moose::Meta::Method);
 
 no Moose;
 1;
@@ -60,13 +9,11 @@ __END__
 
 =head1 NAME
 
-MooseX::POE::Meta::Instance - A Instance Metaclass for MooseX::POE
+MooseX::POE::Meta::Method::State - A Method Metaclass for MooseX::POE
 
 =head1 SYNOPSIS
 
-    use metaclass 'MooseX::Async::Meta::Class' => 
-    ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
-
+    method_metaclass 'MooseX::POE::Meta::Class';
   
 =head1 DESCRIPTION
 
@@ -76,20 +23,6 @@ so there is no user documentation provided.
 =head1 METHODS
 
 =over
-
-=item create_instance
-
-=item get_slot_value
-
-=item inline_slot_access
-
-=item is_slot_initialized
-
-=item set_slot_value
-
-=item weaken_slot_value
-
-=item get_session_id
 
 =item meta
 
