@@ -45,7 +45,7 @@ sub main {
         shift->yield('loop');
     }
 
-    sub on_loop {
+    event loop => sub {
         my ($self) = @_;
         if ( not eof $file ) {
             my @chunk;
@@ -54,23 +54,22 @@ sub main {
             return;
         }
         $self->yield('tally');
-    }
+      }
 
-    sub on_inc {
-        my $chunk = $_[ARG0];
-        my $count = $_[0]->count;
-        for ( keys %$chunk ) {
+      event inc => {
+        my $chunk   = $_[ARG0];
+          my $count = $_[0]->count;
+          for ( keys %$chunk ) {
             $count->{$_} += $chunk->{$_};
         }
         $_[0]->count($count);
-    }
+      }
 
-    sub on_tally {
+      event tally => {
         my $count = $_[OBJECT]->count;
-
-        print "$count->{$_}: $_"
+          print "$count->{$_}: $_"
           for sort { $count->{$b} <=> $count->{$a} } keys %$count;
-    }
+      }
 
 }
 
@@ -79,8 +78,7 @@ sub main {
     package Count;
     use MooseX::POE;
 
-    sub on_loop {
-        warn 'loop';
+    event loop => sub {
         my ( $self, $sender, $chunk ) = @_[ OBJECT, SENDER, ARG0 ];
         my $count = {};
         for my $line (@$chunk) {
@@ -90,7 +88,7 @@ sub main {
         }
         POE::Kernel->post( $sender => 'inc', $count );
         POE::Kernel->post( $sender => 'loop' );
-    }
+      }
 
 }
 

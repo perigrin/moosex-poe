@@ -1,113 +1,84 @@
-package MooseX::POE::Object;
+package MooseX::Async::Meta::Class;
 use strict;
-our $VERSION = '0.0.1';
-
-use metaclass 'MooseX::POE::Meta::Class' =>
-  ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
-
 use Moose;
+use MooseX::Async::Meta::Method::State;
 
-sub get_session_id {
-    my ($self) = @_;
-    return $self->meta->get_meta_instance->get_session_id($self);
+use B 'svref_2object';
+
+extends qw(Moose::Meta::Class);
+
+sub add_state_method {
+    my ( $self, $name, $method ) = @_;
+    ( !$self->has_method($name) )
+      || confess
+      "Cannot add an augment method if a local method is already present";
+    $self->add_method(
+        $name => MooseX::Async::Meta::Method::State->wrap($method) );
 }
-sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
-sub START { }
-sub STOP  { }
+#XXX: Ick we had to copy the entire thing from Class::MOP::Class
+#     because there was no easy way to subclass it
+sub get_method_map {
+    my $self = shift;
+    my $map  = $self->{'%!methods'};
 
-__PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
+    my $class_name       = $self->name;
+    my $method_metaclass = $self->method_metaclass;
 
-__PACKAGE__->meta->alias_method( _default => 'DEFAULT' )
-  if __PACKAGE__->meta->has_method('DEFAULT');
+    foreach my $symbol ( $self->list_all_package_symbols('CODE') ) {
 
-__PACKAGE__->meta->alias_method( _child => 'CHILD' )
-  if __PACKAGE__->meta->has_method('CHILD');
+        # if the method starts with 'on_' we want our custom metaclass
+        $method_metaclass = 'MooseX::Async::Meta::Method::State'
+          if $symbol =~ /^on_|^(?:START|STOP|CHILD|PARENT|DEFAULT)$/;
 
-__PACKAGE__->meta->alias_method( _parent => 'PARENT' )
-  if __PACKAGE__->meta->has_method('PARENT');
+        my $code = $self->get_package_symbol( '&' . $symbol );
 
-no Moose;  # unimport Moose's keywords so they won't accidentally become methods
-1;         # Magic true value required at end of module
+        next
+          if exists $map->{$symbol}
+          && defined $map->{$symbol}
+          && $map->{$symbol}->body == $code;
+
+        my $gv = svref_2object($code)->GV;
+        next
+          if ( $gv->STASH->NAME || '' ) ne $class_name
+          && ( $gv->NAME || '' ) ne '__ANON__';
+
+        $map->{$symbol} = $method_metaclass->wrap($code);
+    }
+
+    return $map;
+}
+
+no Moose;
+1;
 __END__
 
 =head1 NAME
 
-MooseX::POE::Object - The base class for MooseX::Poe
-
-
-=head1 VERSION
-
-This document describes Moose::POE::Object version 0.0.1
-
+MooseX::POE::Meta::Class - A Class Metaclass for MooseX::POE
 
 =head1 SYNOPSIS
 
-    package Counter;
-    use MooseX::Poe;
-
-    has name => (
-        isa     => 'Str',
-        is      => 'rw',
-        default => sub { 'Foo ' },
-    );
-
-    has count => (
-        isa     => 'Int',
-        is      => 'rw',
-        lazy    => 1,
-        default => sub { 0 },
-    );
-
-    sub START {
-        my ($self) = @_;
-        $self->yield('increment');
-    }
-
-    sub increment {
-        my ($self) = @_;
-        $self->count( $self->count + 1 );
-        $self->yield('increment') unless $self->count > 3;
-    }
-
-    no MooseX::Poe;
-
+    metaclass 'MooseX::POE::Meta::Class';
   
 =head1 DESCRIPTION
 
-MooseX::POE::Object is a Moose::Object subclass that implements a POE::Session
+A metaclass for MooseX::POE. This module is only of use to developers 
+so there is no user documentation provided.
 
-=head1 DEFAULT METHODS
+=head1 METHODS
 
 =over
 
-=item get_session_id
+=item initialize
 
-Get the internal Session ID, this is useful to hand to other POE aware functions.
+=item add_state_method
 
-=item yield
+=item get_method_map
 
-A cheap alias for POE::Kernel->yield() which will gurantee posting to the object's session.
-
-=item meta 
+=item meta
 
 The metaclass accessor provided by C<Moose::Object>.
-
-=back
-
-=head1 PREDEFINED EVENTS 
-
-=over
-
-=item START
-
-=item STOP
-
-=item DEFAULT
-
-=item CHILD
-
-=item PARENT
 
 =back
 
@@ -119,7 +90,7 @@ The metaclass accessor provided by C<Moose::Object>.
     the module is part of the standard Perl distribution, part of the
     module's distribution, or must be installed separately. ]
 
-L<Moose>, L<POE>
+L<Moose::Meta::Class>, L<MooseX::POE::Meta::Instance>
 
 
 =head1 INCOMPATIBILITIES
@@ -155,7 +126,6 @@ L<http://rt.cpan.org>.
 =head1 AUTHOR
 
 Chris Prather  C<< <perigrin@cpan.org> >>
-
 
 =head1 LICENCE AND COPYRIGHT
 
