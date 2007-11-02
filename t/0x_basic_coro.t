@@ -1,5 +1,5 @@
 use strict;
-use Test::More no_plan => 1;
+use Test::More tests => 186;
 use Coro;
 {
 
@@ -23,6 +23,7 @@ use Coro;
         my ($self) = @_;
         ::pass( 'Starting ' . $self->name );
         $self->yield('inc');
+        $self->yield('STOP');
     }
 
     event inc => sub {
@@ -42,3 +43,4 @@ use Coro;
 }
 
 my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 0 .. 30 );
+

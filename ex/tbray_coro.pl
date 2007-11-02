@@ -19,14 +19,14 @@ $|++;
 sub main {
     die 'no file' unless -e 'ex/tbray.data';
     Slurp->new( filename => 'ex/tbray.data' );
-    POE::Kernel->run();
 }
 
 {
 
     package Slurp;
-    use MooseX::POE;
+    use MooseX::Coro;
     use IO::File;
+    use Coro;
     has filename => (
         isa => 'Str',
         is  => 'ro',
@@ -38,37 +38,40 @@ sub main {
         default => sub { {} },
     );
 
-    my $file;
+    has file => (
+        isa     => 'IO::File',
+        is      => 'ro',
+        lazy    => 1,
+        default => sub { IO::File->new( $_[0]->filename, 'r' ); },
+    );
 
     sub START {
-        $file ||= IO::File->new( $_[0]->filename, 'r' );
-        shift->yield('loop');
+        $_[0]->yield('loop');
     }
 
     event loop => sub {
         my ($self) = @_;
-        if ( not eof $file ) {
-            my @chunk;
-            push @chunk, <$file> for ( 0 .. 1 );
-            Count->new->yield( 'loop', \@chunk );
-            return;
+        my $file = $self->file;
+        while ( my $line = <$file> ) {
+            Count->new( sender => $self, chunk => [$line] );
         }
         $self->yield('tally');
     };
 
     event inc => sub {
-        my $chunk = $_[ARG0];
-        my $count = $_[0]->count;
-        for ( keys %$chunk ) {
-            $count->{$_} += $chunk->{$_};
-        }
+        my ( $self, $chunk ) = @_;
+        my $count = $self->count;
+        $count->{$_} += $chunk->{$_} for ( keys %$chunk );
         $_[0]->count($count);
     };
 
     event tally => sub {
-        my $count = $_[OBJECT]->count;
+        my $count = $_[0]->count;
+
         print "$count->{$_}: $_"
           for sort { $count->{$b} <=> $count->{$a} } keys %$count;
+
+        $_[0]->yield('STOP');
     };
 
 }
@@ -76,18 +79,34 @@ sub main {
 {
 
     package Count;
-    use MooseX::POE;
+    use MooseX::Coro;
+
+    has sender => (
+        isa      => 'Slurp',
+        is       => 'ro',
+        required => 1
+    );
+
+    has chunk => (
+        isa        => 'ArrayRef',
+        is         => 'ro',
+        auto_deref => 1,
+        required   => 1,
+    );
+
+    sub START {
+        $_[0]->yield('loop');
+    }
 
     event loop => sub {
-        my ( $self, $sender, $chunk ) = @_[ OBJECT, SENDER, ARG0 ];
+        my ($self) = @_;
         my $count = {};
-        for my $line (@$chunk) {
+        for my $line ( $self->chunk ) {
             $count->{$1}++
               if $line =~
               qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
         }
-        POE::Kernel->post( $sender => 'inc', $count );
-        POE::Kernel->post( $sender => 'loop' );
+        $self->sender->yield( 'inc', $count );
     };
 
 }

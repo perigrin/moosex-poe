@@ -3,21 +3,23 @@ package MooseX::Coro::Object;
 use metaclass 'MooseX::Async::Meta::Class';
 
 use Moose;
-use Coro;
+use Coro qw(:prio cede);
 
 sub BUILD {
+    $Coro::main->prio(PRIO_IDLE);
     $_[0]->yield('START');
-    $_[0]->yield('STOP');
 }
 
 sub START { }
-sub STOP { cede while Coro::nready; }
+sub STOP  { }
 
 sub yield {
     my ( $self, $name ) = splice @_, 0, 2;
     if ( my $event = $self->can($name) ) {
-        Coro->new( $event, $self, @_ )->ready;
-        cede;
+        my $c = Coro->new( $event, $self, @_ );
+        $c->desc( $self . "->$name" );
+        $c->ready;
+        cede for Coro::nready;
     }
 }
 
