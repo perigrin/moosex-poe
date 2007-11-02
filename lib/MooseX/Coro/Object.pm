@@ -7,10 +7,11 @@ use Coro;
 
 sub BUILD {
     $_[0]->yield('START');
+    $_[0]->yield('STOP');
 }
 
 sub START { }
-sub STOP  { }
+sub STOP { cede while Coro::nready; }
 
 sub yield {
     my ( $self, $name ) = splice @_, 0, 2;

@@ -1,6 +1,6 @@
 use strict;
 use Test::More no_plan => 1;
-
+use Coro;
 {
 
     package Counter;
@@ -21,7 +21,7 @@ use Test::More no_plan => 1;
 
     sub START {
         my ($self) = @_;
-        ::pass('Starting ');
+        ::pass( 'Starting ' . $self->name );
         $self->yield('inc');
     }
 
@@ -36,10 +36,9 @@ use Test::More no_plan => 1;
         ::pass('Stopping');
     }
 
-    no MooseX::POE;
+    no MooseX::Coro;
 
-    #    __PACKAGE__->meta->make_immutable;
+    __PACKAGE__->meta->make_immutable;
 }
 
-my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 1 .. 30 );
-
+my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 0 .. 30 );
