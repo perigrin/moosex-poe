@@ -55,8 +55,10 @@ sub main {
         my $counter = Count->new;
         while ( not eof $file ) {
             my @chunk;
-            push @chunk, <$file> for ( 0 .. 1 );
-
+            for ( 0 .. ( 600000 / 2 ) ) {
+                $_ = <$file>;
+                push @chunk, $_;
+            }
             $counter->yield( 'loop', $self, \@chunk );
         }
         $self->yield('tally');
@@ -84,18 +86,43 @@ sub main {
 
     package Count;
     use MooseX::Coro;
+    use Coro::Util;
+    use Coro::Semaphore;
+
+    has cpulock => (
+        is      => 'ro',
+        default => sub { new Coro::Semaphore 2; },
+        handles => [qw(guard)],
+    );
+
+    my $rx = qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
 
     event loop => sub {
         my ( $self, $sender, $chunk ) = @_;
-        my $count = {};
-        my $rx    = qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
-        for my $line (@$chunk) {
-            $count->{$1}++
-              if $line =~ $rx;
-        }
+        my $guard = $self->guard;
+        
+        ### This doesn't return until after we have exited 
+        ### this is probably a priority issue but I can't seem to sort it
+        ### Coro is a PITA
+        
+        my $count = Coro::Util::fork_eval {
+            my %count;
+            for my $line (@$chunk) {
+                next unless $line;
+                $count{$1}++ if $line =~ $rx;
+            }
+            warn 'returning ' . scalar keys %count;
+            return \%count;
+        };
+
+        warn "Here!";
         $sender->yield( 'inc', $count );
     };
 
+    event run => sub {
+        my ( $self, $chunk ) = @_;
+
+    };
     __PACKAGE__->meta->make_immutable;
 }
 

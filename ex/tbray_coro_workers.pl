@@ -1,5 +1,12 @@
 #!/usr/bin/env perl -l
 
+###
+### THIS SCRIPT DOES NOT WORK
+###
+### I suspect that Coro and MX::Workers won't play nice, but
+### it will have to wait till later for me to debug it
+###
+
 #
 # http://www.tbray.org/ongoing/When/200x/2007/09/20/Wide-Finder
 #
@@ -45,19 +52,27 @@ sub main {
         default => sub { IO::File->new( $_[0]->filename, 'r' ); },
     );
 
+    has counter => (
+        reader  => 'c',
+        default => sub { Count->new( sender => $_[0] ) },
+        handles => { counter => 'yield' },
+    );
+
     sub START {
         $_[0]->yield('loop');
     }
 
     event loop => sub {
-        my ($self)  = @_;
-        my $file    = $self->file;
-        my $counter = Count->new;
+        my ($self) = @_;
+        my $file = $self->file;
+
         while ( not eof $file ) {
             my @chunk;
-            push @chunk, <$file> for ( 0 .. 1 );
-
-            $counter->yield( 'loop', $self, \@chunk );
+            for ( 0 .. ( 600000 / 8 ) ) {
+                $_ = <$file>;
+                push @chunk, $_;
+            }
+            $self->counter( 'loop', $self, \@chunk );
         }
         $self->yield('tally');
     };
@@ -84,17 +99,47 @@ sub main {
 
     package Count;
     use MooseX::Coro;
+    use JSON::Any qw(XS);
+    with qw(MooseX::Workers);
+
+    sub BUILD { POE::Kernel->run }
+
+    has sender => (
+        reader   => 's',
+        required => 1,
+        handles  => { sender => 'yield' },
+    );
 
     event loop => sub {
-        my ( $self, $sender, $chunk ) = @_;
+        my ( $self, $chunk ) = @_;
         my $count = {};
         my $rx    = qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
-        for my $line (@$chunk) {
-            $count->{$1}++
-              if $line =~ $rx;
-        }
-        $sender->yield( 'inc', $count );
+        $self->spawn(
+            sub {
+                for my $line (@$chunk) {
+                    $count->{$1}++ if $line =~ $rx;
+                }
+                print JSON::Any->encode($count);
+            }
+        );
     };
+
+    sub worker_stdout {
+        my ( $self, $out ) = @_;
+        warn $out;
+        my $count = JSON::Any->decode($out);
+        $self->sender_return( 'inc', $count );
+    }
+
+    sub worker_manager_start { warn 'started worker manager' }
+    sub worker_manager_stop  { warn 'stopped worker manager' }
+    sub max_workers_reached  { warn 'maximum worker count reached' }
+
+    sub worker_stderr { shift; warn 'STDERR: ' . join ' ', @_; }
+    sub worker_error { shift; warn join ' ', @_; }
+    sub worker_done    { shift; warn 'DONE: ' . join ' ',    @_; }
+    sub worker_started { shift; warn 'STARTED: ' . join ' ', @_; }
+    sub sig_child { shift; warn join ' ', @_; }
 
     __PACKAGE__->meta->make_immutable;
 }

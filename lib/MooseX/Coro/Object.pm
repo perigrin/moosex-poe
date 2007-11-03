@@ -13,11 +13,18 @@ sub BUILD {
 sub START { }
 sub STOP  { }
 
-sub yield {
+sub get_coro {
     my ( $self, $name ) = splice @_, 0, 2;
     if ( my $event = $self->can($name) ) {
         my $c = Coro->new( $event, $self, @_ );
         $c->desc( $self . "->$name" );
+        return $c;
+    }
+}
+
+sub yield {
+    my ( $self, $name ) = splice @_, 0, 2;
+    if ( my $c = $self->get_coro( $name, @_ ) ) {
         $c->ready;
         cede for Coro::nready;
     }
