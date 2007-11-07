@@ -13,27 +13,17 @@
 #
 # requires the data at http://www.tbray.org/tmp/o10k.ap
 #
-
-$|++;
-
-sub main {
-    die 'no file' unless -e 'ex/tbray.data.big';
-    Slurp->new( filename => 'ex/tbray.data.big' );
-    POE::Kernel->run();
-}
+use POE qw(Loop::Kqueue);
 
 {
 
     package Slurp;
     use MooseX::POE;
     use IO::File;
-    has filename => (
-        isa => 'Str',
-        is  => 'ro',
-    );
+
+    has filename => ( is => 'ro', );
 
     has count => (
-        isa     => 'HashRef',
         is      => 'rw',
         default => sub { {} },
     );
@@ -45,15 +35,19 @@ sub main {
         handles => { counter => 'yield', }
     );
 
-    my $file;
+    has file => (
+        is      => 'ro',
+        lazy    => 1,
+        default => sub { IO::File->new( $_[0]->filename, 'r' ); },
+    );
 
     sub START {
-        $file ||= IO::File->new( $_[0]->filename, 'r' );
         shift->yield('loop');
     }
 
     event loop => sub {
         my ($self) = @_;
+        my $file = $self->file;
         if ( not eof $file ) {
             my @chunk;
             for ( 0 .. ( 600000 / 8 ) ) {
@@ -90,12 +84,12 @@ sub main {
     use JSON::Any qw(XS);
     with qw(MooseX::Workers);
 
+    my $rx = qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
+
     event loop => sub {
         my ( $self, $sender, $chunk ) = @_[ OBJECT, SENDER, ARG0 ];
-        my $rx = qr|GET /ongoing/When/\d\d\dx/(\d\d\d\d/\d\d/\d\d/[^ .]+)|o;
         $self->spawn(
             sub {
-                Coro::killall;
                 my $count = {};
                 for my $line (@$chunk) {
                     $count->{$1}++ if $line =~ $rx;
@@ -115,4 +109,6 @@ sub main {
 
 }
 
-main();
+die 'no file' unless -e 'ex/tbray.data.big';
+Slurp->new( filename => 'ex/tbray.data.big' );
+POE::Kernel->run();
