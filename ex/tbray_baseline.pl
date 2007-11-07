@@ -27,4 +27,5 @@ while (<$file>) {
     next unless $_ =~ $rx;
     $count{$1}++;
 }
-print "$count{$_}: $_" for sort { $count{$b} <=> $count{$a} } keys %count;
+print "$count{$_}: $_"
+  for ( sort { $count{$b} <=> $count{$a} } keys %count )[ 0 .. 10 ];

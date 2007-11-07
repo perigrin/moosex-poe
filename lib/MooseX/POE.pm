@@ -142,6 +142,10 @@ by L<POE::Stage>.
 
 =head1 METHODS
 
+Default methods are provided by L<MooseX::POE::Object> which is the default 
+baseclass for MooseX::POE objects. These are the methods for the MooseX::POE 
+package itself.
+
 =over
 
 =item import
@@ -189,7 +193,7 @@ None reported.
 No bugs have been reported.
 
 Please report any bugs or feature requests to
-C<bug-moose-poe-object@rt.cpan.org>, or through the web interface at
+C<bug-moosex-poe@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
 
 

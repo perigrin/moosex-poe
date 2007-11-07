@@ -11,7 +11,7 @@ sub add_state_method {
     my ( $self, $name, $method ) = @_;
     ( !$self->has_method($name) )
       || confess
-      "Cannot add an augment method if a local method is already present";
+      "Cannot add a state method ($name) if a local method is already present";
     $self->add_method(
         $name => MooseX::Async::Meta::Method::State->wrap($method) );
 }

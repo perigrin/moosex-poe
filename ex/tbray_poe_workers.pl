@@ -50,7 +50,7 @@ use POE qw(Loop::Kqueue);
         my $file = $self->file;
         if ( not eof $file ) {
             my @chunk;
-            for ( 0 .. ( 600000 / 8 ) ) {
+            for ( 0 .. CHUNK_SIZE ) {
                 $_ = <$file>;
                 push @chunk, $_;
             }
