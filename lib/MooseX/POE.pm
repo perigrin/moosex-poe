@@ -1,12 +1,12 @@
 package MooseX::POE;
 use strict;
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 use Moose;
 use MooseX::POE::Meta::Class;
 use MooseX::POE::Object;
 use Sub::Name 'subname';
 use Sub::Exporter;
-
+use B qw(svref_2object);
 {
     my $CALLER;
     my %exports = (
@@ -84,7 +84,7 @@ This document describes Moose::POE::Object version 0.0.2
 =head1 SYNOPSIS
 
     package Counter;
-    use MooseX::Poe;
+    use MooseX::POE;
 
     has name => (
         isa     => 'Str',
@@ -106,11 +106,12 @@ This document describes Moose::POE::Object version 0.0.2
 
     event increment => sub {
         my ($self) = @_;
+        print "Count is now " . $self->count . "\n";
         $self->count( $self->count + 1 );
         $self->yield('increment') unless $self->count > 3;
-    }
+    };
 
-    no MooseX::Poe;
+    no MooseX::POE;
     
     Counter->new();
     POE::Kernel->run();

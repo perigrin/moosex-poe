@@ -1,9 +1,12 @@
-Revision history for Moose-POE-Object
+Revision history for MooseX-POE
 
+0.0.3 ???
+	+fix Synopsis code to close bug #31432 (sproingie)
+	
 0.0.2 2007-10-23
-	  fix POD
-	  fix tests
+	+fix POD
+	+fix tests
 
 0.0.1  Thu Oct 11 16:58:27 2007
-       Initial release.
+	+Initial release.
 
