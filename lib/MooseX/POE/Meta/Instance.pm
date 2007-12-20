@@ -8,7 +8,7 @@ extends 'Moose::Meta::Instance';
 sub create_instance {
     my $self = shift;
     my $instance = $self->bless_instance_structure( {} );
-    $instance->{session} = $self->get_new_session;
+    $instance->{session} = $self->get_new_session($instance);
     return $instance;
 }
 
