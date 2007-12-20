@@ -1,5 +1,5 @@
 use strict;
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 my ($base_start_called, $extended_start_called);
 {
@@ -8,6 +8,7 @@ my ($base_start_called, $extended_start_called);
 
   sub START { 
     # Do this rather than embedd ::ok(1) here so ath get proper failing reports
+    ::pass('Base Start');
     $base_start_called = 1;
   };
 }
@@ -17,14 +18,14 @@ my ($base_start_called, $extended_start_called);
 
   extends 'Base';
 
-
   after START => sub {
-    $extended_start_called = 1;   
+    ::pass('Extended after Start');
+    $extended_start_called = 1;
   };
 }
 
-new Extended;
+my $foo = Extended->new();
 POE::Kernel->run();
 
 ok($base_start_called, "Base START called");
-ok($extended_start_called, "Extended START called");
+ok($extended_start_called,"Extended START called");

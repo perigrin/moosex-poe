@@ -12,12 +12,10 @@ sub create_instance {
 
     my $instance = $self->bless_instance_structure( {} );
     $instance->{session} = POE::Session->create(
-        inline_states => {
-            _start => sub { POE::Kernel->yield('START') },
-            _stop  => sub { POE::Kernel->call('STOP') }
-        },
+        inline_states => { _start => sub { POE::Kernel->yield('START') }, },
         object_states => [
             $instance => {
+                _stop => 'STOP',
                 map { $_ => $_ }
                   map  { $_->meta->get_events }
                   grep { $_->meta->isa('MooseX::POE::Meta::Class') }

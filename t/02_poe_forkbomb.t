@@ -34,7 +34,7 @@ my %english = (
     }
 
     sub STOP {
-        ::pass( 'stopped ' . $_[0]->id );
+        ::pass( 'stopped ' . $_[OBJECT]->id );
     }
 
     sub CHILD {
@@ -63,15 +63,15 @@ my %english = (
         );
     }
 
-    sub on_signal_handler {
+    event signal_handler => sub {
         my ( $self, $signal_name ) = @_[ OBJECT, ARG0 ];
         ::diag printf( "%4d has received SIG%s\n", $self->id, $signal_name );
 
         # tell Kernel that this wasn't handled
         return 0;
-    }
+    };
 
-    sub on_fork {
+    event fork => sub {
         my ( $kernel, $self ) = @_[ KERNEL, OBJECT ];
 
         if ( $count < $max_sessions ) {
@@ -105,9 +105,9 @@ my %english = (
                 $poe_kernel->yield('_stop');
             }
         }
-    }
+    };
 
-    sub on_fetch_id {
+    event fetch_id => sub {
         return $_[OBJECT]->id;
     }
 
