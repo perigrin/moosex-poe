@@ -6,12 +6,16 @@ use POE;
 extends 'Moose::Meta::Instance';
 
 sub create_instance {
-    my $self  = shift;
-    my $meta  = $self->associated_metaclass;
-    my $class = $meta->name;
-
+    my $self = shift;
     my $instance = $self->bless_instance_structure( {} );
-    $instance->{session} = POE::Session->create(
+    $instance->{session} = $self->get_new_session;
+    return $instance;
+}
+
+sub get_new_session {
+    my ( $self, $instance ) = @_;
+    my $meta = $self->associated_metaclass;
+    return POE::Session->create(
         inline_states => { _start => sub { POE::Kernel->yield('START') }, },
         object_states => [
             $instance => {
@@ -25,7 +29,6 @@ sub create_instance {
         args => [$instance],
         heap => {},
     );
-    return $instance;
 }
 
 sub get_session_id {
