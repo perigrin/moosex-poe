@@ -18,7 +18,10 @@ sub create_instance {
         },
         object_states => [
             $instance => {
-                map { $_ => $_ } $meta->get_events
+                map { $_ => $_ }
+                  map  { $_->meta->get_events }
+                  grep { $_->meta->isa('MooseX::POE::Meta::Class') }
+                  $meta->linearized_isa
             },
         ],
         args => [$instance],
