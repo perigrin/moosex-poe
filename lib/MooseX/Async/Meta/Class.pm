@@ -2,18 +2,31 @@ package MooseX::Async::Meta::Class;
 use strict;
 use Moose;
 use MooseX::Async::Meta::Method::State;
-
+use MooseX::AttributeHelpers;
 use B 'svref_2object';
 
 extends qw(Moose::Meta::Class);
 
+has events => (
+    accessor   => 'get_events',
+    metaclass  => 'Collection::Array',
+    isa        => 'ArrayRef',
+    is         => 'ro',
+    auto_deref => 1,
+    default    => sub { [qw(START STOP)] },
+    provides   => { push => 'add_event', }
+);
+
 sub add_state_method {
     my ( $self, $name, $method ) = @_;
-    ( !$self->has_method($name) )
-      || confess
-      "Cannot add a state method ($name) if a local method is already present";
-    $self->add_method(
-        $name => MooseX::Async::Meta::Method::State->wrap($method) );
+    if ( $self->has_method($name) ) {
+        my $full_name = $self->get_method($name)->full_qualified_name;
+        confess
+"Cannot add a state method ($name) if a local method ($full_name) is already present";
+    }
+
+    $self->add_event($name);
+    $self->add_method( $name => $method );
 }
 
 #XXX: Ick we had to copy the entire thing from Class::MOP::Class
@@ -35,8 +48,8 @@ sub get_method_map {
 
         next
           if exists $map->{$symbol}
-          && defined $map->{$symbol}
-          && $map->{$symbol}->body == $code;
+              && defined $map->{$symbol}
+              && $map->{$symbol}->body == $code;
 
         my $gv = svref_2object($code)->GV;
         next

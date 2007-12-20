@@ -7,16 +7,18 @@ extends 'Moose::Meta::Instance';
 
 sub create_instance {
     my $self  = shift;
-    my $class = $self->associated_metaclass->name;
+    my $meta  = $self->associated_metaclass;
+    my $class = $meta->name;
 
     my $instance = $self->bless_instance_structure( {} );
     $instance->{session} = POE::Session->create(
-        inline_states => { _start => sub { POE::Kernel->yield('START') }, },
+        inline_states => {
+            _start => sub { POE::Kernel->yield('START') },
+            _stop  => sub { POE::Kernel->call('STOP') }
+        },
         object_states => [
             $instance => {
-                map { $_->{name} => $_->{name} }
-                  grep { $_->{code}->isa('MooseX::Async::Meta::Method::State') }
-                  $self->associated_metaclass->compute_all_applicable_methods
+                map { $_ => $_ } $meta->get_events
             },
         ],
         args => [$instance],

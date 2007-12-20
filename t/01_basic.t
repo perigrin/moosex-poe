@@ -6,12 +6,6 @@ use Test::More no_plan => 1;
     package Counter;
     use MooseX::POE;
 
-    has name => (
-        isa     => 'Str',
-        is      => 'ro',
-        default => sub { 'Counter' },
-    );
-
     has count => (
         isa     => 'Int',
         is      => 'rw',
@@ -27,9 +21,10 @@ use Test::More no_plan => 1;
 
     event inc => sub {
         my ($self) = $_[OBJECT];
-        ::pass( $self->name . ': Inc ' . $self->count );
+        ::pass( $self . ':' . $self->count );
         $self->count( $self->count + 1 );
-        $self->yield('inc') unless $self->count > 3;
+        return if 3 < $self->count;
+        $self->yield('inc');
     };
 
     sub STOP {
@@ -37,9 +32,7 @@ use Test::More no_plan => 1;
     }
 
     no MooseX::POE;
-
-    #    __PACKAGE__->meta->make_immutable;
 }
 
-my @objs = map { Counter->new( name => 'Counter ' . $_ ) } ( 1 .. 30 );
+my @objs = map { Counter->new } ( 1 .. 30 );
 POE::Kernel->run();
