@@ -33,6 +33,12 @@ sub add_state_method {
 #     because there was no easy way to subclass it
 sub get_method_map {
     my $self = shift;
+
+    if (defined $self->{'$!_package_cache_flag'} && 
+                $self->{'$!_package_cache_flag'} == Class::MOP::check_package_cache_flag($self->name)) {
+        return $self->{'%!methods'};
+    }
+    
     my $map  = $self->{'%!methods'};
 
     my $class_name       = $self->name;
@@ -41,8 +47,10 @@ sub get_method_map {
     foreach my $symbol ( $self->list_all_package_symbols('CODE') ) {
 
         # if the method starts with 'on_' we want our custom metaclass
-        $method_metaclass = 'MooseX::Async::Meta::Method::State'
-          if $symbol =~ /^on_|^(?:START|STOP|CHILD|PARENT|DEFAULT)$/;
+        my $this_method_metaclass =
+          ($symbol =~ /^on_|^(?:START|STOP|CHILD|PARENT|DEFAULT)$/)
+            ?  'MooseX::Async::Meta::Method::State'
+            : $method_metaclass;
 
         my $code = $self->get_package_symbol( '&' . $symbol );
 
@@ -51,12 +59,28 @@ sub get_method_map {
               && defined $map->{$symbol}
               && $map->{$symbol}->body == $code;
 
-        my $gv = svref_2object($code)->GV;
-        next
-          if ( $gv->STASH->NAME || '' ) ne $class_name
-          && ( $gv->NAME || '' ) ne '__ANON__';
+        my ($pkg, $name) = Class::MOP::get_code_info($code);
 
-        $map->{$symbol} = $method_metaclass->wrap($code);
+        if ($pkg->can('meta')
+            # NOTE:
+            # we don't know what ->meta we are calling
+            # here, so we need to be careful cause it
+            # just might blow up at us, or just complain
+            # loudly (in the case of Curses.pm) so we
+            # just be a little overly cautious here.
+            # - SL
+            && eval { no warnings; blessed($pkg->meta) }
+            && $pkg->meta->isa('Moose::Meta::Role')) {
+            #my $role = $pkg->meta->name;
+            #next unless $self->does_role($role);
+        }
+        else {
+            next if ($pkg  || '') ne $class_name &&
+                    ($name || '') ne '__ANON__';
+
+        }
+
+        $map->{$symbol} = $this_method_metaclass->wrap($code);
     }
 
     return $map;
