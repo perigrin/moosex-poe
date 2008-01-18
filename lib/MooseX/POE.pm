@@ -27,13 +27,20 @@ use B qw(svref_2object);
     );
 
     sub import {
+        my ( $pkg, $subclass ) = @_;
         $CALLER = caller();
         strict->import;
         warnings->import;
 
         return if $CALLER eq 'main';
-        Moose::init_meta( $CALLER, 'MooseX::POE::Object',
-            'MooseX::POE::Meta::Class' );
+        my $object_class = 'MooseX::POE::Object';
+        my $meta_class   = 'MooseX::POE::Meta::Class';
+
+        if ($subclass) {
+            $object_class .= '::' . ucfirst $subclass;
+        }
+
+        Moose::init_meta( $CALLER, $object_class, $meta_class );
         Moose->import( { into => $CALLER } );
         ## no critic
         eval qq{package $CALLER; use POE; };
@@ -79,7 +86,7 @@ MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes Moose::POE::Object version 0.0.2
+This document describes MooseX::POE version 0.0.3
 
 =head1 SYNOPSIS
 
