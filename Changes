@@ -1,6 +1,10 @@
 Revision history for MooseX-POE
 
-0.0.3 ???
+0.0.4 2008-01-17
+	(functionally the same as 0.03)
+	+Fix test to skip if MooseX::Daemonize not installed
+
+0.0.3 2008-01-15
 	+fix Synopsis code to close bug #31432 (sproingie)
 	
 0.0.2 2007-10-23

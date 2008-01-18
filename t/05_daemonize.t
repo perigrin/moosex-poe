@@ -1,7 +1,11 @@
 #!/usr/bin/perl -w
-
 use strict;
-use Test::More tests => 3;
+use Test::More 
+eval "use MooseX::Daemonize";
+plan skip_all => "MooseX::Daemonize not installed; skipping" if $@;
+
+plan tests => 3;
+
 {
     package App;
     use MooseX::POE;
