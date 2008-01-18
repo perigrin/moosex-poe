@@ -20,7 +20,7 @@ sub get_new_session {
         object_states => [
             $instance => {
                 _stop => 'STOP',
-                map { $_ => $_ }
+                map { $_ => $meta->get_state_method_name($_) }
                   map  { $_->meta->get_events }
                   grep { $_->meta->isa('MooseX::POE::Meta::Class') }
                   $meta->linearized_isa

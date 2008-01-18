@@ -10,13 +10,13 @@ use Test::More no_plan => 1;
         isa     => 'Int',
         is      => 'rw',
         lazy    => 1,
-        default => sub { 0 },
+        default => sub { 1 },
     );
 
     sub START {
         my ($self) = $_[OBJECT];
         ::pass('Starting ');
-        $self->yield('inc');
+        $self->yield('dec');
     }
 
     event inc => sub {
@@ -27,6 +27,13 @@ use Test::More no_plan => 1;
         $self->yield('inc');
     };
 
+    sub on_dec {
+        my ($self) = $_[OBJECT];
+        ::pass('decrement');
+		$self->count($self->count - 1 );
+		$self->yield('inc');
+    }
+
     sub STOP {
         ::pass('Stopping');
     }
@@ -34,5 +41,5 @@ use Test::More no_plan => 1;
     no MooseX::POE;
 }
 
-my @objs = map { Counter->new } ( 1 .. 30 );
+my @objs = map { Counter->new } ( 1 .. 10 );
 POE::Kernel->run();

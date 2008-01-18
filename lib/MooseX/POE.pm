@@ -133,18 +133,7 @@ MooseX::POE::Object is a Moose wrapper around a POE::Session.
 
 =item event $name $subref
 
-Create an event handler named $name. You can also implicitly create 
-event handlers by using the 'on_' prefix, thus the example in the 
-synopsis could also be:
-
-    sub on_increment { 
-        my ($self) = @_;
-        $self->count($self->count + 1);
-        $self->yield('increment') unless $self->count > 3;
-    }
-    
-The 'on_' syntax is supported because it is the emerging standard set 
-by L<POE::Stage>.
+Create an event handler named $name. 
 
 =back
 
