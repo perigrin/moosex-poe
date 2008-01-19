@@ -18,7 +18,7 @@ my ($base_start_called, $extended_start_called);
 
   extends 'Base';
 
-  after START => sub {
+  sub START {
     ::pass('Extended after Start');
     $extended_start_called = 1;
   };

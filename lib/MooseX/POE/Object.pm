@@ -13,10 +13,33 @@ sub get_session_id {
 }
 sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
-sub START { }
-sub STOP  { }
+sub STARTALL {
+    # NOTE: we ask Perl if we even 
+    # need to do this first, to avoid
+    # extra meta level calls
+  return unless $_[0]->can('START');    
+  my ($self, $params) = @_;
+  foreach my $method (reverse $self->meta->find_all_methods_by_name('START')) {
+    $method->{code}->($self, $params);
+  }
+}
 
-__PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
+
+sub STOPALL {
+    # NOTE: we ask Perl if we even 
+    # need to do this first, to avoid
+    # extra meta level calls
+  return unless $_[0]->can('STOP');    
+  my ($self, $params) = @_;
+  foreach my $method (reverse $self->meta->find_all_methods_by_name('STOP')) {
+    $method->{code}->($self, $params);
+  }
+}
+
+sub START {}
+sub STOP {}
+
+# __PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
 
 __PACKAGE__->meta->alias_method( _default => 'DEFAULT' )
   if __PACKAGE__->meta->has_method('DEFAULT');
