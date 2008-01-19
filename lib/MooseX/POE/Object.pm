@@ -1,6 +1,6 @@
 package MooseX::POE::Object;
 use strict;
-our $VERSION = '0.0.1';
+our $VERSION = '0.050';
 
 use metaclass 'MooseX::POE::Meta::Class' =>
   ( instance_metaclass => 'MooseX::POE::Meta::Instance' );

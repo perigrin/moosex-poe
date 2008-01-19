@@ -1,5 +1,8 @@
 Revision history for MooseX-POE
 
+0.050 2008-01-??
+  +startup calls STARTALL, which calls all STARTS (like BUILDALL, etc.) (rjbs)
+
 0.0.4 2008-01-17
 	(functionally the same as 0.03)
 	+Fix test to skip if MooseX::Daemonize not installed
