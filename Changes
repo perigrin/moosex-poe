@@ -1,5 +1,7 @@
 Revision history for MooseX-POE
 
+0.060 ???
+
 0.050 2008-01-22
   +startup calls STARTALL, which calls all STARTS (like BUILDALL, etc.) (rjbs)
   +fix to the fix for MooseX::Daemonize skipping (autarch)
