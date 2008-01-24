@@ -18,9 +18,9 @@ sub STARTALL {
     # need to do this first, to avoid
     # extra meta level calls
   return unless $_[0]->can('START');    
-  my ($self, $params) = @_;
+  my ($self, @params) = @_;
   foreach my $method (reverse $self->meta->find_all_methods_by_name('START')) {
-    $method->{code}->($self, $params);
+    $method->{code}->($self, @params);
   }
 }
 

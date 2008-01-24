@@ -1,6 +1,7 @@
 Revision history for MooseX-POE
 
 0.060 ???
+  +START now get all the POE arguments again like they used to. (ash)
 
 0.050 2008-01-22
   +startup calls STARTALL, which calls all STARTS (like BUILDALL, etc.) (rjbs)

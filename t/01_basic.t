@@ -16,8 +16,8 @@ use Test::More no_plan => 1;
     sub START {
         my ($self, $kernel, $session) = @_[OBJECT, KERNEL, SESSION];
         ::pass('Starting ');
-        ::isa_ok($kernel, "POE::Kernel", "Got a kernel in START");
-        ::isa_ok($session, "POE::Session", "Got a session in START");
+        ::isa_ok($kernel, "POE::Kernel", "kernel in START");
+        ::isa_ok($session, "POE::Session", "session in START");
         $self->yield('dec');
     }
 
