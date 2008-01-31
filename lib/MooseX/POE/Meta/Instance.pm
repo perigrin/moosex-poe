@@ -53,7 +53,8 @@ sub is_slot_initialized {
 }
 
 sub weaken_slot_value {
-    confess "Write me";
+    my ( $self, $instance, $slot_name ) = @_;
+    Scalar::Util::weaken( $instance->{session}->get_heap->{$slot_name} );
 }
 
 sub inline_slot_access {
