@@ -1,7 +1,7 @@
 Revision history for MooseX-POE
 
-0.070 ???
-
+0.070 2008-02-03
+  +attributes can now be weak_ref=>1 (rjbs)
 
 0.060 2008-01-25
   +START now get all the POE arguments again like they used to. (ash)
