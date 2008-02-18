@@ -1,5 +1,8 @@
 Revision history for MooseX-POE
 
+0.080
+  +Sessions are no longer leaked because they are only referenced by ID
+
 0.070 2008-02-03
   +attributes can now be weak_ref=>1 (rjbs)
 
