@@ -44,4 +44,11 @@ use Test::More no_plan => 1;
 }
 
 my @objs = map { Counter->new } ( 1 .. 10 );
+
+my $mem_cycle = eval { require Test::Memory::Cycle };
+
+Test::Memory::Cycle::memory_cycle_ok(\@objs, "no memory cycles") if $mem_cycle;
+
 POE::Kernel->run();
+
+Test::Memory::Cycle::memory_cycle_ok(\@objs, "no memory cycles") if $mem_cycle;
