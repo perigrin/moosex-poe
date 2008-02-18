@@ -5,10 +5,14 @@ use POE;
 
 extends 'Moose::Meta::Instance';
 
+use Scalar::Util ();
+
 sub create_instance {
     my $self = shift;
     my $instance = $self->bless_instance_structure( {} );
-    $instance->{session} = $self->get_new_session($instance);
+    my $session = $self->get_new_session($instance);
+    $instance->{heap} = $session->get_heap;
+    $instance->{session_id} = $session->ID;
     return $instance;
 }
 
@@ -34,32 +38,32 @@ sub get_new_session {
 
 sub get_session_id {
     my ( $self, $instance ) = @_;
-    return $instance->{session}->ID;
+    return $instance->{session_id};
 }
 
 sub get_slot_value {
     my ( $self, $instance, $slot_name ) = @_;
-    return $instance->{session}->get_heap->{$slot_name};
+    return $instance->{heap}{$slot_name};
 }
 
 sub set_slot_value {
     my ( $self, $instance, $slot_name, $value ) = @_;
-    $instance->{session}->get_heap->{$slot_name} = $value;
+    $instance->{heap}{$slot_name} = $value;
 }
 
 sub is_slot_initialized {
     my ( $self, $instance, $slot_name, $value ) = @_;
-    exists $instance->{session}->get_heap->{$slot_name} ? 1 : 0;
+    exists $instance->{heap}{$slot_name} ? 1 : 0;
 }
 
 sub weaken_slot_value {
     my ( $self, $instance, $slot_name ) = @_;
-    Scalar::Util::weaken( $instance->{session}->get_heap->{$slot_name} );
+    Scalar::Util::weaken( $instance->{heap}{$slot_name} );
 }
 
 sub inline_slot_access {
     my ( $self, $instance, $slot_name ) = @_;
-    sprintf "%s->{session}->get_heap->{%s}", $instance, $slot_name;
+    sprintf '%s->{heap}{%s}', $instance, $slot_name;
 }
 
 no Moose;
