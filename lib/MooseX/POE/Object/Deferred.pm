@@ -7,7 +7,10 @@ use metaclass 'MooseX::POE::Meta::Class' =>
 extends qw(MooseX::POE::Object);
 
 sub start_session {
-    $self->{session} = $self->meta->get_meta_instance->get_new_session($self);
+    my $self = shift;
+    my $session = $self->meta->get_meta_instance->get_new_session($self);
+    $self->{session_id}  = $session->ID;
+    $self->{heap}        = $session->get_heap;
 }
 
 no Moose;
