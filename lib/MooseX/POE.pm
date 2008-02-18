@@ -1,5 +1,5 @@
 package MooseX::POE;
-our $VERSION = 0.070;
+our $VERSION = 0.080;
 use Moose;
 use MooseX::POE::Meta::Class;
 use MooseX::POE::Object;
