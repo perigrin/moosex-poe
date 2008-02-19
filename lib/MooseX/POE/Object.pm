@@ -13,6 +13,8 @@ sub get_session_id {
 }
 sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
+sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
+
 sub STARTALL {
     # NOTE: we ask Perl if we even 
     # need to do this first, to avoid
