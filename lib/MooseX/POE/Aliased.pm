@@ -9,6 +9,7 @@ has alias => (
     isa => "Str|Undef",
     is  => "rw",
     builder     => "_build_alias",
+    clearer     => "clear_alias",
     initializer => sub {
         my ( $self, $alias, $cb, $attr ) = @_;
         $cb->($alias);
