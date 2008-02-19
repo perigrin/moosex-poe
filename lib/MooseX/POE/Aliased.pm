@@ -8,23 +8,28 @@ use POE;
 has alias => (
     isa => "Str|Undef",
     is  => "rw",
-    lazy_build => 1,
+    builder     => "_build_alias",
+    initializer => sub {
+        my ( $self, $alias, $cb, $attr ) = @_;
+        $cb->($alias);
+        $self->call( _update_alias => $alias );
+    },
     trigger => sub {
         my ( $self, $alias ) = @_;
-        $poe_kernel->call( $self->get_session_id, "_update_alias", $alias );
-    },
+        $self->call( _update_alias => $alias );
+    }
 );
 
 sub _build_alias {
     my $self = shift;
-
     overload::StrVal($self);
 }
 
 event _update_alias => sub {
     my ( $kernel, $self, $alias ) = @_[KERNEL, OBJECT, ARG0];
 
-    # remove prev alias
+    # we need to remove the prev alias like this because we don't know the
+    # previous value.
     $kernel->alarm_remove_all();
 
 	$kernel->alias_set($alias) if defined $alias;
