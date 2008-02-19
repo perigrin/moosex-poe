@@ -1,13 +1,15 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 {
     package Rollo;
-    use Moose::Role;
+    use MooseX::POE::Role;
     
     sub foo { ::pass('foo!')}
+
+    event yarr => sub { ::pass("yarr!") }
 }
 
 {
@@ -23,7 +25,11 @@ use Test::More tests => 4;
         $self->yield('next');
     }
     
-    event next => sub { ::pass('next') };
+    event next => sub {
+        my ($self) = $_[OBJECT];
+        ::pass('next');
+        $self->yield("yarr");
+    };
     
     sub STOP { ::pass('STOP') }
 }
