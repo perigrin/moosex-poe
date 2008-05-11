@@ -85,7 +85,7 @@ MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes MooseX::POE version 0.0.7
+This document describes MooseX::POE version 0.080
 
 =head1 SYNOPSIS
 
