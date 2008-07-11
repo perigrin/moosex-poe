@@ -20,11 +20,11 @@ sub get_new_session {
     my ( $self, $instance ) = @_;
     my $meta = $self->associated_metaclass;
     return POE::Session->create(
-        inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
         object_states => [
             $instance => {
-              STARTALL => 'STARTALL',
-              _stop  => 'STOPALL',
+              _start   => '_start',
+              STARTALL => "STARTALL",
+              _stop    => 'STOPALL',
                 map { $_ => $meta->get_state_method_name($_) }
                   map  { $_->meta->get_events }
                   grep { $_->meta->isa('MooseX::POE::Meta::Class') }
