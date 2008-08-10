@@ -9,7 +9,7 @@ use Scalar::Util ();
 
 sub create_instance {
     my $self = shift;
-    my $instance = $self->bless_instance_structure( {} );
+    my $instance = $self->SUPER::create_instance(@_);
     my $session = $self->get_new_session($instance);
     $instance->{heap} = $session->get_heap;
     $instance->{session_id} = $session->ID;
