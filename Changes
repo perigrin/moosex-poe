@@ -1,5 +1,11 @@
 Revision history for MooseX-POE
 
+0.90
+  +Remove the meta instance
+    -- this increases interoperability with other metaclases
+    -- make_immutable now supported
+    -- use Moose::Exporter
+
 0.080
   +Sessions are no longer leaked because they are only referenced by ID
   +Add MooseX::POE::Role
