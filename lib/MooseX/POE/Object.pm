@@ -4,15 +4,22 @@ our $VERSION = '0.050';
 
 use POE;
 
-use metaclass 'MooseX::POE::Meta::Class' =>
-  ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
+use metaclass 'MooseX::POE::Meta::Class';
 
 use Moose;
 
-sub get_session_id {
-    my ($self) = @_;
-    return $self->meta->get_meta_instance->get_session_id($self);
+has _poe_session_id => (
+    reader   => "get_session_id",
+    init_arg => undef,
+    isa      => "Int",
+    builder  => "_build_poe_session_id",
+);
+
+sub _build_poe_session_id {
+    my $self = shift;
+    Class::MOP::Class->initialize(ref $self)->get_new_session($self)->ID;
 }
+
 sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
 sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
@@ -20,6 +27,15 @@ sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
 sub _start {
   $_[KERNEL]->yield('STARTALL');
 }
+
+__PACKAGE__->meta->add_method(
+    _start => MooseX::Async::Meta::Method::State->wrap(
+        body  => \&_start,
+        name  => "_start",
+        event => "_start",
+        package_name => __PACKAGE__,
+    ),
+);
 
 sub STARTALL {
     # NOTE: we ask Perl if we even 
@@ -31,6 +47,15 @@ sub STARTALL {
     $method->{code}->($self, @params);
   }
 }
+
+__PACKAGE__->meta->add_method(
+    STARTALL => MooseX::Async::Meta::Method::State->wrap(
+        body  => \&STARTALL,
+        name  => "STARTALL",
+        event => "STARTALL",
+        package_name => __PACKAGE__,
+    ),
+);
 
 
 sub STOPALL {
@@ -44,16 +69,14 @@ sub STOPALL {
   }
 }
 
-# __PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
-
-__PACKAGE__->meta->alias_method( _default => 'DEFAULT' )
-  if __PACKAGE__->meta->has_method('DEFAULT');
-
-__PACKAGE__->meta->alias_method( _child => 'CHILD' )
-  if __PACKAGE__->meta->has_method('CHILD');
-
-__PACKAGE__->meta->alias_method( _parent => 'PARENT' )
-  if __PACKAGE__->meta->has_method('PARENT');
+__PACKAGE__->meta->add_method(
+    STOPALL => MooseX::Async::Meta::Method::State->wrap(
+        body  => \&STOPALL,
+        name  => "STOPALL",
+        event => "STOPALL",
+        package_name => __PACKAGE__,
+    ),
+);
 
 no Moose;  # unimport Moose's keywords so they won't accidentally become methods
 1;         # Magic true value required at end of module

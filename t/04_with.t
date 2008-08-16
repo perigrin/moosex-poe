@@ -9,7 +9,7 @@ use Test::More tests => 5;
     
     sub foo { ::pass('foo!')}
 
-    event yarr => sub { ::pass("yarr!") }
+    event yarr => sub { ::pass("yarr!") };
 }
 
 {
