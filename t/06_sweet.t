@@ -4,7 +4,6 @@ use Test::More 'no_plan';
 
 {
   package Counter;
-  use MooseX::POE;
   use metaclass 'MooseX::POE::SweetArgs';
   use MooseX::POE;
 
