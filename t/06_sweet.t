@@ -1,17 +1,11 @@
-<<<<<<< HEAD:t/06_sweet.t
 #!/usr/bin/env perl
-=======
->>>>>>> SweetArgs and test:t/06_sweet.t
 use strict;
 use Test::More 'no_plan';
 
 {
   package Counter;
-<<<<<<< HEAD:t/06_sweet.t
-  use MooseX::POE;
-=======
->>>>>>> SweetArgs and test:t/06_sweet.t
   use metaclass 'MooseX::POE::SweetArgs';
+  use MooseX::POE;
 
   has count => (is => 'rw', default => 1);
 
