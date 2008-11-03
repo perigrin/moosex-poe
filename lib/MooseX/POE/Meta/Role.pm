@@ -1,12 +1,18 @@
 package MooseX::POE::Meta::Role;
 use Moose;
+extends qw(MooseX::Async::Meta::Role);
 
-extends qw(Moose::Meta::Role);
+sub default_events {
+    my ($self) = @_;
+    my $events = $self->SUPER::default_events();
+    push @$events, grep { s/^on_(\w+)/$1/; } $self->get_method_list;
+    return $events;
+}
 
-with qw(MooseX::POE::Meta::Trait);
+sub get_state_method_name {
+    my ( $self, $name ) = @_;
+    return 'on_' . $name if $self->has_method( 'on_' . $name );
+    return $self->SUPER::get_state_method_name($name);
+}
 
-__PACKAGE__->meta->make_immutable;
 
-__PACKAGE__
-
-__END__

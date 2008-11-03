@@ -1,20 +1,80 @@
 package MooseX::POE;
-our $VERSION = 0.090;
+our $VERSION = 0.080;
 use Moose;
 use MooseX::POE::Meta::Class;
 use MooseX::POE::Object;
+use Sub::Name 'subname';
+use Sub::Exporter;
+use B qw(svref_2object);
+{
+    my $CALLER;
+    my %exports = (
+        event => sub {
+            my $class = $CALLER;
+            return subname 'MooseX::POE::event' => sub ($&) {
+                my ( $name, $method ) = @_;
+                $class->meta->add_state_method( $name => $method );
+            };
+        },
+    );
 
-with qw(MooseX::POE::Exporter);
+    my $exporter = Sub::Exporter::build_exporter(
+        {
+            exports => \%exports,
+            groups  => { default => [':all'] }
+        }
+    );
 
-__PACKAGE__->setup_import_methods();
+    sub import {
+        my ( $pkg, $subclass ) = @_;
+        $CALLER = caller();
+        strict->import;
+        warnings->import;
 
-sub _also_import { "Moose" }
+        return if $CALLER eq 'main';
+        my $object_class = 'MooseX::POE::Object';
+        my $meta_class   = 'MooseX::POE::Meta::Class';
 
-sub _init_params {
-    metaclass  => "MooseX::POE::Meta::Class",
-    base_class => "MooseX::POE::Object",
+        if ($subclass) {
+            $object_class .= '::' . ucfirst $subclass;
+        }
+
+        Moose::init_meta( $CALLER, $object_class, $meta_class );
+        Moose->import( { into => $CALLER } );
+        ## no critic
+        eval qq{package $CALLER; use POE; };
+        ## use critic
+        die $@ if $@;
+
+        goto $exporter;
+    }
+
+    sub unimport {
+        no strict 'refs';
+        my $class = caller();
+
+        # loop through the exports ...
+        foreach my $name ( keys %exports ) {
+
+            # if we find one ...
+            if ( defined &{ $class . '::' . $name } ) {
+                my $keyword = \&{ $class . '::' . $name };
+
+                # make sure it is from Moose
+                my $pkg_name =
+                  eval { svref_2object($keyword)->GV->STASH->NAME };
+                next if $@;
+                next if $pkg_name ne 'MooseX::POE';
+
+                # and if it is from Moose then undef the slot
+                delete ${ $class . '::' }{$name};
+            }
+        }
+
+        # now let Moose do the same thing
+        goto &{ Moose->can('unimport') };
+    }
 }
-
 no Moose;
 1;
 __END__

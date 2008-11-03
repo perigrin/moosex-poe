@@ -27,11 +27,11 @@ sub _build_alias {
 }
 
 event _update_alias => sub {
-    my ( $kernel, $self, $session, $alias ) = @_[KERNEL, OBJECT, SESSION, ARG0];
+    my ( $kernel, $self, $alias ) = @_[KERNEL, OBJECT, ARG0];
 
     # we need to remove the prev alias like this because we don't know the
     # previous value.
-    $kernel->alias_remove($_) for $kernel->alias_list($session);
+    $kernel->alarm_remove_all();
 
 	$kernel->alias_set($alias) if defined $alias;
 };

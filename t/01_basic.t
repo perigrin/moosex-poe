@@ -29,12 +29,12 @@ use Test::More no_plan => 1;
         $self->yield('inc');
     };
 
-    event dec => sub {
+    sub on_dec {
         my ($self) = $_[OBJECT];
         ::pass('decrement');
 		$self->count($self->count - 1 );
 		$self->yield('inc');
-    };
+    }
 
     sub STOP {
         ::pass('Stopping');

@@ -9,7 +9,7 @@ use Scalar::Util ();
 
 sub create_instance {
     my $self = shift;
-    my $instance = $self->SUPER::create_instance(@_);
+    my $instance = $self->bless_instance_structure( {} );
     my $session = $self->get_new_session($instance);
     $instance->{heap} = $session->get_heap;
     $instance->{session_id} = $session->ID;
@@ -19,7 +19,22 @@ sub create_instance {
 sub get_new_session {
     my ( $self, $instance ) = @_;
     my $meta = $self->associated_metaclass;
- }
+    return POE::Session->create(
+        inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
+        object_states => [
+            $instance => {
+              STARTALL => 'STARTALL',
+              _stop  => 'STOPALL',
+                map { $_ => $meta->get_state_method_name($_) }
+                  map  { $_->meta->get_events }
+                  grep { $_->meta->isa('MooseX::POE::Meta::Class') }
+                  $meta->linearized_isa
+            },
+        ],
+        args => [$instance],
+        heap => {},
+    );
+}
 
 sub get_session_id {
     my ( $self, $instance ) = @_;

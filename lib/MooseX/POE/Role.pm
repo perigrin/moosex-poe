@@ -1,19 +1,49 @@
 package MooseX::POE::Role;
 use Moose;
 use MooseX::POE::Meta::Role;
+use Sub::Name 'subname';
+use Sub::Exporter;
+use B qw(svref_2object);
+{
+    my $CALLER;
+    my %exports = (
+        event => sub {
+            my $class = $CALLER;
+            return subname 'MooseX::POE::Role::event' => sub ($&) {
+                my ( $name, $method ) = @_;
+                $class->meta->add_state_method( $name => $method );
+            };
+        },
+    );
 
-use Moose::Role ();
+    my $exporter = Sub::Exporter::build_exporter(
+        {
+            exports => \%exports,
+            groups  => { default => [':all'] }
+        }
+    );
 
-with qw(MooseX::POE::Exporter);
+    sub import {
+        my ( $pkg ) = @_;
+        $CALLER = caller();
+        strict->import;
+        warnings->import;
 
-__PACKAGE__->setup_import_methods();
+        return if $CALLER eq 'main';
+        my $meta_class   = 'MooseX::POE::Meta::Role';
 
-sub _also_import { "Moose::Role" }
+        my $meta = MooseX::POE::Meta::Role->initialize($CALLER);
+        $meta->alias_method(meta => sub { $meta } );
 
-sub _init_params {
-    metaclass  => "MooseX::POE::Meta::Role",
+        Moose::Role->import( { into => $CALLER } );
+        ## no critic
+        eval qq{package $CALLER; use POE; };
+        ## use critic
+        die $@ if $@;
+
+        goto $exporter;
+    }
 }
-
 no Moose;
 1;
 __END__

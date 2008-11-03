@@ -1,5 +1,5 @@
 use strict;
-use Test::More tests => 6;
+use Test::More tests => 4;
 
 my ($base_start_called, $extended_start_called);
 {
@@ -9,7 +9,6 @@ my ($base_start_called, $extended_start_called);
   sub START { 
     # Do this rather than embedd ::ok(1) here so ath get proper failing reports
     ::pass('Base Start');
-    ::ok(!$extended_start_called, "extended start not called yet");
     $base_start_called = 1;
   };
 }
@@ -20,7 +19,6 @@ my ($base_start_called, $extended_start_called);
   extends 'Base';
 
   sub START {
-    ::ok($base_start_called, "base start already called");
     ::pass('Extended after Start');
     $extended_start_called = 1;
   };
