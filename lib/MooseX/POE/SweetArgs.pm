@@ -32,4 +32,16 @@ MooseX::POE::SweetArgs - sugar around MooseX::POE event arguments
     ...
   };
 
+=head1 DESCRIPTION
+
+Normally, when using MooseX::POE, subs declared as events need to use POE
+macros for unpacking C<@_>, e.g.:
+
+  my ($self, $foo, $bar) = @_[OBJECT, ARG0..$#_];
+
+Using MooseX::POE::SweetArgs as a metaclass lets you avoid this, and just use
+C<@_> as normal:
+
+  my ($self, $foo, $bar) = @_;
+
 =cut
