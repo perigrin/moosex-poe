@@ -1,5 +1,5 @@
 use strict;
-use Test::More no_plan => 1;
+use Test::More 'no_plan';
 
 my $count         = 0;
 my $max_sessions  = 30;
