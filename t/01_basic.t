@@ -1,5 +1,5 @@
 use strict;
-use Test::More no_plan => 1;
+use Test::More 'no_plan';
 
 {
 
