@@ -1,5 +1,5 @@
 package MooseX::POE;
-our $VERSION = 0.090;
+our $VERSION = 0.100;
 use Moose ();
 use MooseX::POE::Meta::Class;
 use MooseX::POE::Object;
@@ -43,7 +43,7 @@ MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes MooseX::POE version 0.080
+This document describes MooseX::POE version 0.100
 
 =head1 SYNOPSIS
 
