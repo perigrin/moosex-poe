@@ -1,81 +1,39 @@
 package MooseX::POE;
 our $VERSION = 0.090;
-use Moose;
+use Moose ();
 use MooseX::POE::Meta::Class;
 use MooseX::POE::Object;
-use Sub::Name 'subname';
-use Sub::Exporter;
-use B qw(svref_2object);
-{
-    my $CALLER;
-    my %exports = (
-        event => sub {
-            my $class = $CALLER;
-            return subname 'MooseX::POE::event' => sub ($&) {
-                my ( $name, $method ) = @_;
-                $class->meta->add_state_method( $name => $method );
-            };
-        },
-    );
+use Moose::Exporter;
 
-    my $exporter = Sub::Exporter::build_exporter(
-        {
-            exports => \%exports,
-            groups  => { default => [':all'] }
-        }
-    );
+my ( $import, $unimport ) = Moose::Exporter->build_import_methods(
+    with_caller => [qw(event)],
+    also        => 'Moose',
+);
 
-    sub import {
-        my ( $pkg, $subclass ) = @_;
-        $CALLER = caller();
-        strict->import;
-        warnings->import;
+*unimport = $unimport;
 
-        return if $CALLER eq 'main';
-        my $object_class = 'MooseX::POE::Object';
-        my $meta_class   = 'MooseX::POE::Meta::Class';
-
-        if ($subclass) {
-            $object_class .= '::' . ucfirst $subclass;
-        }
-
-        Moose::init_meta( $CALLER, $object_class, $meta_class );
-        Moose->import( { into => $CALLER } );
-        ## no critic
-        eval qq{package $CALLER; use POE; };
-        ## use critic
-        die $@ if $@;
-
-        goto $exporter;
-    }
-
-    sub unimport {
-        no strict 'refs';
-        my $class = caller();
-
-        # loop through the exports ...
-        foreach my $name ( keys %exports ) {
-
-            # if we find one ...
-            if ( defined &{ $class . '::' . $name } ) {
-                my $keyword = \&{ $class . '::' . $name };
-
-                # make sure it is from Moose
-                my $pkg_name =
-                  eval { svref_2object($keyword)->GV->STASH->NAME };
-                next if $@;
-                next if $pkg_name ne 'MooseX::POE';
-
-                # and if it is from Moose then undef the slot
-                delete ${ $class . '::' }{$name};
-            }
-        }
-
-        # now let Moose do the same thing
-        goto &{ Moose->can('unimport') };
-    }
+sub import {
+    my ( $traits, @args ) = Moose::Exporter::_strip_traits(@_);
+    $CALLER = Moose::Exporter::_get_caller(@args);
+    eval qq{package $CALLER; use POE; };
+    goto &$import;
 }
-no Moose;
+
+sub init_meta {
+    shift;    # our class name
+    return Moose->init_meta(
+        @_,
+        metaclass  => 'MooseX::POE::Meta::Class',
+        base_class => 'MooseX::POE::Object'
+    );
+}
+
+sub event {
+    my ( $caller, $name, $method ) = @_;
+    my $class = Moose::Meta::Class->initialize($caller);
+    $class->add_state_method( $name => $method );
+}
+
 1;
 __END__
 
