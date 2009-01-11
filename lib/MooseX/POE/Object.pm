@@ -2,8 +2,6 @@ package MooseX::POE::Object;
 use strict;
 our $VERSION = '0.050';
 
-use POE;
-
 use metaclass 'MooseX::POE::Meta::Class' =>
   ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
 
@@ -16,10 +14,6 @@ sub get_session_id {
 sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
 sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
-
-sub _start {
-  $_[KERNEL]->yield('STARTALL');
-}
 
 sub STARTALL {
     # NOTE: we ask Perl if we even 
@@ -43,6 +37,9 @@ sub STOPALL {
     $method->{code}->($self, $params);
   }
 }
+
+sub START {}
+sub STOP {}
 
 # __PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
 

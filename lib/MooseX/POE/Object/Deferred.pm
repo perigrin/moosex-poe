@@ -1,16 +1,16 @@
 package MooseX::POE::Object::Deferred;
 use Moose;
 
-use metaclass 'MooseX::POE::Meta::Class' =>
-  ( instance_metaclass => 'MooseX::POE::Meta::Instance::Deferred' );
+use metaclass 'MooseX::POE::Meta::Class';
 
 extends qw(MooseX::POE::Object);
 
+
+has '+_poe_session_id' => ( lazy => 1 );
+
 sub start_session {
     my $self = shift;
-    my $session = $self->meta->get_meta_instance->get_new_session($self);
-    $self->{session_id}  = $session->ID;
-    $self->{heap}        = $session->get_heap;
+    $self->get_session_id(); # force
 }
 
 no Moose;
