@@ -1,17 +1,14 @@
 package MooseX::POE::Role;
-use Moose::Role;
 
 use MooseX::POE::Meta::Role;
 
 use Moose::Exporter;
 
 sub event ($&) {
-  $DB::single = 1;
   my ( $class, $name, $method ) = @_;
   $class->meta->add_state_method( $name => $method );
 }
 
-$DB::single = 1;
 Moose::Exporter->setup_import_methods(
   with_caller => [ qw/event/ ],
   also => 'Moose::Role'
@@ -20,7 +17,6 @@ Moose::Exporter->setup_import_methods(
 sub init_meta {
   my ($class, %p) = @_;
 
-  $DB::single = 1;
   my $for = $p{for_class};
 
   eval qq{package $for; use POE; };
