@@ -1,6 +1,6 @@
 package MooseX::POE::Meta::Role;
-use Moose;
-extends qw(MooseX::Async::Meta::Role);
+use Moose::Role;
+with qw(MooseX::Async::Meta::Trait);
 
 sub default_events {
     my ($self) = @_;
@@ -15,4 +15,7 @@ sub get_state_method_name {
     return $self->SUPER::get_state_method_name($name);
 }
 
+no Moose::Role;
+
+1;
 

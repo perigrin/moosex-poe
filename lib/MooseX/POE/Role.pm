@@ -2,17 +2,50 @@ package MooseX::POE::Role;
 use Moose::Role;
 
 use MooseX::POE::Meta::Role;
-use Sub::Name 'subname';
-use Sub::Exporter;
 
-{
+use Moose::Exporter;
+
+sub event ($&) {
+  $DB::single = 1;
+  my ( $class, $name, $method ) = @_;
+  $class->meta->add_state_method( $name => $method );
+}
+
+$DB::single = 1;
+Moose::Exporter->setup_import_methods(
+  with_caller => [ qw/event/ ],
+  also => 'Moose::Role'
+);
+
+sub init_meta {
+  my ($class, %p) = @_;
+
+  $DB::single = 1;
+  my $for = $p{for_class};
+
+  eval qq{package $for; use POE; };
+
+  my $meta;
+  unless ($for->can('meta')) {
+    $meta = Moose::Role->init_meta(for_class => $for);
+  } else {
+    $meta = $for->meta;
+  }
+
+  Moose::Util::MetaRole::apply_metaclass_roles(
+    for_class => $p{for_class},
+    metaclass_roles => ['MooseX::POE::Meta::Role']
+  );
+}
+
+=for comment
+
+if (0) {
     my $CALLER;
     my %exports = (
         event => sub {
             my $class = $CALLER;
             return subname 'MooseX::POE::Role::event' => sub ($&) {
-                my ( $name, $method ) = @_;
-                $class->meta->add_state_method( $name => $method );
             };
         },
     );
@@ -43,6 +76,8 @@ use Sub::Exporter;
         goto $exporter;
     }
 }
+
+=cut
 
 no Moose::Role;
 
