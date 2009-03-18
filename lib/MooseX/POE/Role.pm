@@ -1,9 +1,10 @@
 package MooseX::POE::Role;
-use Moose;
+use Moose::Role;
+
 use MooseX::POE::Meta::Role;
 use Sub::Name 'subname';
 use Sub::Exporter;
-use B qw(svref_2object);
+
 {
     my $CALLER;
     my %exports = (
@@ -30,12 +31,10 @@ use B qw(svref_2object);
         warnings->import;
 
         return if $CALLER eq 'main';
+
         my $meta_class   = 'MooseX::POE::Meta::Role';
+        my $meta = Moose::Role->init_meta(for_class => $CALLER, metaclass => $meta_class);
 
-        my $meta = MooseX::POE::Meta::Role->initialize($CALLER);
-        $meta->alias_method(meta => sub { $meta } );
-
-        Moose::Role->import( { into => $CALLER } );
         ## no critic
         eval qq{package $CALLER; use POE; };
         ## use critic
@@ -44,7 +43,9 @@ use B qw(svref_2object);
         goto $exporter;
     }
 }
-no Moose;
+
+no Moose::Role;
+
 1;
 __END__
 

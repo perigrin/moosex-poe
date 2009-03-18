@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::More tests => 5;
+use Test::More tests => 6;
+use Test::Moose;
 
 {
     package Rollo;
@@ -34,5 +35,7 @@ use Test::More tests => 5;
     sub STOP { ::pass('STOP') }
 }
 
-App->new;
+my $obj = App->new;
+
+does_ok($obj, 'Rollo');
 POE::Kernel->run;
