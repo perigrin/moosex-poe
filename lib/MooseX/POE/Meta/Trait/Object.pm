@@ -1,111 +1,135 @@
-package MooseX::POE::Meta::Instance;
-use strict;
-use Moose;
-use POE;
+package MooseX::POE::Meta::Trait::Object;
 
-extends 'Moose::Meta::Instance';
-
-use Scalar::Util ();
-
-sub create_instance {
-    my $self = shift;
-    my $instance = $self->bless_instance_structure( {} );
-    my $session = $self->get_new_session($instance);
-    $instance->{heap} = $session->get_heap;
-    $instance->{session_id} = $session->ID;
-    return $instance;
-}
-
-sub get_new_session {
-    my ( $self, $instance ) = @_;
-    my $meta = $self->associated_metaclass;
-    return POE::Session->create(
-        inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
-        object_states => [
-            $instance => {
-              STARTALL => 'STARTALL',
-              _stop  => 'STOPALL',
-                map { $_ => $meta->get_state_method_name($_) }
-                  map  { $_->meta->get_events }
-                  grep { $_->meta->isa('MooseX::POE::Meta::Class') }
-                  $meta->linearized_isa
-            },
-        ],
-        args => [$instance],
-        heap => {},
-    );
-}
+use Moose::Role;
 
 sub get_session_id {
-    my ( $self, $instance ) = @_;
-    return $instance->{session_id};
+    my ($self) = @_;
+    return $self->meta->get_meta_instance->get_session_id($self);
+}
+sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
+
+sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
+
+sub STARTALL {
+    # NOTE: we ask Perl if we even 
+    # need to do this first, to avoid
+    # extra meta level calls
+  return unless $_[0]->can('START');    
+  my ($self, @params) = @_;
+  foreach my $method (reverse $self->meta->find_all_methods_by_name('START')) {
+    $method->{code}->($self, @params);
+  }
 }
 
-sub get_slot_value {
-    my ( $self, $instance, $slot_name ) = @_;
-    return $instance->{heap}{$slot_name};
+
+sub STOPALL {
+    # NOTE: we ask Perl if we even 
+    # need to do this first, to avoid
+    # extra meta level calls
+  return unless $_[0]->can('STOP');    
+  my ($self, $params) = @_;
+  foreach my $method (reverse $self->meta->find_all_methods_by_name('STOP')) {
+    $method->{code}->($self, $params);
+  }
 }
 
-sub set_slot_value {
-    my ( $self, $instance, $slot_name, $value ) = @_;
-    $instance->{heap}{$slot_name} = $value;
-}
+sub START {}
+sub STOP {}
 
-sub is_slot_initialized {
-    my ( $self, $instance, $slot_name, $value ) = @_;
-    exists $instance->{heap}{$slot_name} ? 1 : 0;
-}
+# __PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
 
-sub weaken_slot_value {
-    my ( $self, $instance, $slot_name ) = @_;
-    Scalar::Util::weaken( $instance->{heap}{$slot_name} );
-}
+__PACKAGE__->meta->alias_method( _default => 'DEFAULT' )
+  if __PACKAGE__->meta->has_method('DEFAULT');
 
-sub inline_slot_access {
-    my ( $self, $instance, $slot_name ) = @_;
-    sprintf '%s->{heap}{%s}', $instance, $slot_name;
-}
+__PACKAGE__->meta->alias_method( _child => 'CHILD' )
+  if __PACKAGE__->meta->has_method('CHILD');
 
-no Moose;
+__PACKAGE__->meta->alias_method( _parent => 'PARENT' )
+  if __PACKAGE__->meta->has_method('PARENT');
+
+no Moose::Role;
+
 1;
+
 __END__
 
 =head1 NAME
 
-MooseX::POE::Meta::Instance - A Instance Metaclass for MooseX::POE
+MooseX::POE::Object - The base class for MooseX::Poe
+
+
+=head1 VERSION
+
+This document describes Moose::POE::Object version 0.0.1
+
 
 =head1 SYNOPSIS
 
-    use metaclass 'MooseX::Async::Meta::Class' => 
-    ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
+    package Counter;
+    use MooseX::Poe;
+
+    has name => (
+        isa     => 'Str',
+        is      => 'rw',
+        default => sub { 'Foo ' },
+    );
+
+    has count => (
+        isa     => 'Int',
+        is      => 'rw',
+        lazy    => 1,
+        default => sub { 0 },
+    );
+
+    sub START {
+        my ($self) = @_;
+        $self->yield('increment');
+    }
+
+    sub increment {
+        my ($self) = @_;
+        $self->count( $self->count + 1 );
+        $self->yield('increment') unless $self->count > 3;
+    }
+
+    no MooseX::Poe;
 
   
 =head1 DESCRIPTION
 
-A metaclass for MooseX::POE. This module is only of use to developers 
-so there is no user documentation provided.
+MooseX::POE::Object is a Moose::Object subclass that implements a POE::Session
 
-=head1 METHODS
+=head1 DEFAULT METHODS
 
 =over
 
-=item create_instance
-
-=item get_slot_value
-
-=item inline_slot_access
-
-=item is_slot_initialized
-
-=item set_slot_value
-
-=item weaken_slot_value
-
 =item get_session_id
 
-=item meta
+Get the internal Session ID, this is useful to hand to other POE aware functions.
+
+=item yield
+
+A cheap alias for POE::Kernel->yield() which will gurantee posting to the object's session.
+
+=item meta 
 
 The metaclass accessor provided by C<Moose::Object>.
+
+=back
+
+=head1 PREDEFINED EVENTS 
+
+=over
+
+=item START
+
+=item STOP
+
+=item DEFAULT
+
+=item CHILD
+
+=item PARENT
 
 =back
 
@@ -117,7 +141,7 @@ The metaclass accessor provided by C<Moose::Object>.
     the module is part of the standard Perl distribution, part of the
     module's distribution, or must be installed separately. ]
 
-L<Moose::Meta::Class>, L<MooseX::POE::Meta::Instance>
+L<Moose>, L<POE>
 
 
 =head1 INCOMPATIBILITIES
@@ -153,6 +177,7 @@ L<http://rt.cpan.org>.
 =head1 AUTHOR
 
 Chris Prather  C<< <perigrin@cpan.org> >>
+
 
 =head1 LICENCE AND COPYRIGHT
 

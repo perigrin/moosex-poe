@@ -1,8 +1,10 @@
 package MooseX::POE;
+
 our $VERSION = 0.100;
+
 use Moose ();
-use MooseX::POE::Meta::Class;
-use MooseX::POE::Object;
+#use MooseX::POE::Meta::Class;
+#use MooseX::POE::Object;
 use Moose::Exporter;
 
 Moose::Exporter->setup_import_methods(
@@ -15,11 +17,27 @@ sub init_meta {
 
     my $for = $args{for_class};
     eval qq{package $for; use POE; };
-    
-    return Moose->init_meta(
-        %args,
-        metaclass  => 'MooseX::POE::Meta::Class',
-        base_class => 'MooseX::POE::Object'
+   
+    Moose->init_meta(
+      for_class => $for
+    );
+    #my $meta = Moose->init_meta(
+    #    %args,
+    #    metaclass  => 'MooseX::POE::Meta::Class',
+    #    #base_class => 'MooseX::POE::Object'
+    #);
+
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+      for_class => $for,
+      metaclass_roles => [ 'MooseX::POE::Meta::Trait::Class' ],
+      instance_metaclass_roles => [
+        'MooseX::POE::Meta::Trait::Instance',
+      ],
+    );
+    Moose::Util::MetaRole::apply_base_class_roles(
+      for_class => $for,
+      roles => ['MooseX::POE::Meta::Trait::Object']
     );
 }
 
