@@ -5,24 +5,19 @@ use MooseX::POE::Meta::Class;
 use MooseX::POE::Object;
 use Moose::Exporter;
 
-my ( $import, $unimport ) = Moose::Exporter->build_import_methods(
+Moose::Exporter->setup_import_methods(
     with_caller => [qw(event)],
     also        => 'Moose',
 );
 
-*unimport = $unimport;
-
-sub import {
-    my ( $traits, @args ) = Moose::Exporter::_strip_traits(@_);
-    $CALLER = Moose::Exporter::_get_caller(@args);
-    eval qq{package $CALLER; use POE; };
-    goto &$import;
-}
-
 sub init_meta {
-    shift;    # our class name
+    my ($class, %args) = @_;
+
+    my $for = $args{for_class};
+    eval qq{package $for; use POE; };
+    
     return Moose->init_meta(
-        @_,
+        %args,
         metaclass  => 'MooseX::POE::Meta::Class',
         base_class => 'MooseX::POE::Object'
     );
