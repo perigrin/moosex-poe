@@ -12,7 +12,6 @@ Moose::Exporter->setup_import_methods(
 sub init_meta {
     my ($class, %args) = @_;
     MooseX::POE->init_meta(%args);
-    $DB::single = 1;
 
     Moose::Util::MetaRole::apply_metaclass_roles(
       for_class => $args{for_class},
@@ -32,8 +31,7 @@ MooseX::POE::SweetArgs - sugar around MooseX::POE event arguments
   package Thing;
 
   # must come before MooseX::POE!
-  use metaclass 'MooseX::POE::SweetArgs';
-  use MooseX::POE;
+  use MooseX::POE::SweetArgs;
 
   # declare events like usual
   event on_success => sub {
@@ -55,5 +53,14 @@ Using MooseX::POE::SweetArgs as a metaclass lets you avoid this, and just use
 C<@_> as normal:
 
   my ($self, $foo, $bar) = @_;
+
+Since the POE kernel is a singleton, you can access it using class methods, as
+shown in the synopsis.
+
+In all other respects, this behaves exactly like MooseX::POE
+
+=head1 SEE ALSO
+
+L<MooseX::POE>
 
 =cut
