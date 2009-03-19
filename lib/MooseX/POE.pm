@@ -3,8 +3,6 @@ package MooseX::POE;
 our $VERSION = 0.100;
 
 use Moose ();
-#use MooseX::POE::Meta::Class;
-#use MooseX::POE::Object;
 use Moose::Exporter;
 
 Moose::Exporter->setup_import_methods(
@@ -104,68 +102,48 @@ Create an event handler named $name.
 
 =head1 METHODS
 
-Default methods are provided by L<MooseX::POE::Object> which is the default 
-baseclass for MooseX::POE objects. These are the methods for the MooseX::POE 
-package itself.
+Default POE-related methods are provided by L<MooseX::POE::Meta::TraitObject>
+which is applied to your base class (which is usually L<Moose::Object>) when
+you use this module. See that module for the documentation for. Below is a list
+of methods on that class so you know what to look for:
 
 =over
 
-=item import
+=item get_session_id
 
-Export the Moose Keywords as well as the C<event> keyword defined above.
+=item yield
 
-=item unimport
+=item call
 
-Unexport the Moose Keywords as well as the C<event> keyword defined above.
+=item STARTALL
 
-=item meta
-
-The metaclass accessor provided by C<Moose::Object>.
+=item STOPALL
 
 =back
 
+
 =head1 DEPENDENCIES
 
-L<Moose>, L<POE>, L<Sub::Name>, L<Sub::Exporter>
-
-
-=head1 INCOMPATIBILITIES
-
-=for author to fill in:
-    A list of any modules that this module cannot be used in conjunction
-    with. This may be due to name conflicts in the interface, or
-    competition for system or program resources, or due to internal
-    limitations of Perl (for example, many modules that use source code
-    filters are mutually incompatible).
-
-None reported.
+L<Moose>, L<POE>
 
 
 =head1 BUGS AND LIMITATIONS
 
-=for author to fill in:
-    A list of known problems with the module, together with some
-    indication Whether they are likely to be fixed in an upcoming
-    release. Also a list of restrictions on the features the module
-    does provide: data types that cannot be handled, performance issues
-    and the circumstances in which they may arise, practical
-    limitations on the size of data sets, special cases that are not
-    (yet) handled, etc.
-
 No bugs have been reported.
 
-Please report any bugs or feature requests to
-C<bug-moosex-poe@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
+Please report any bugs or feature requests to C<bug-moosex-poe@rt.cpan.org>, or
+through the web interface at L<http://rt.cpan.org>.
 
 =head1 AUTHOR
 
 Chris Prather  C<< <perigrin@cpan.org> >>
 
+Ash Berlin C<< <ash@cpan.org> >>
+
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2007, Chris Prather C<< <perigrin@cpan.org> >>. Some rights reserved.
+Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
+C<< <ash@cpan.org> >>. All rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.

@@ -63,4 +63,18 @@ In all other respects, this behaves exactly like MooseX::POE
 
 L<MooseX::POE>
 
+=head1 AUTHOR
+
+Chris Prather  C<< <perigrin@cpan.org> >>
+
+Ash Berlin C<< <ash@cpan.org> >>
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
+C<< <ash@cpan.org> >>. All rights reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself. See L<perlartistic>.
+
 =cut

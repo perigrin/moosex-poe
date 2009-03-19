@@ -42,12 +42,19 @@ __END__
 
 =head1 NAME
 
-MooseX::POE::Meta::Instance - A Instance Metaclass for MooseX::POE
+MooseX::POE::Meta::Trait::Instance - A Instance Metaclass for MooseX::POE
 
 =head1 SYNOPSIS
 
-    use metaclass 'MooseX::Async::Meta::Class' => 
-    ( instance_metaclass => 'MooseX::POE::Meta::Instance' );
+    Moose::Util::MetaRole::apply_metaclass_roles(
+      for_class => $for_class,
+      metaclass_roles => [ 
+        'MooseX::POE::Meta::Trait::Class' 
+      ],
+      instance_metaclass_roles => [
+        'MooseX::POE::Meta::Trait::Instance',
+      ],
+    );
 
   
 =head1 DESCRIPTION
@@ -73,60 +80,18 @@ so there is no user documentation provided.
 
 =item get_session_id
 
-=item meta
-
-The metaclass accessor provided by C<Moose::Object>.
-
 =back
-
-=head1 DEPENDENCIES
-
-=for author to fill in:
-    A list of all the other modules that this module relies upon,
-    including any restrictions on versions, and an indication whether
-    the module is part of the standard Perl distribution, part of the
-    module's distribution, or must be installed separately. ]
-
-L<Moose::Meta::Class>, L<MooseX::POE::Meta::Instance>
-
-
-=head1 INCOMPATIBILITIES
-
-=for author to fill in:
-    A list of any modules that this module cannot be used in conjunction
-    with. This may be due to name conflicts in the interface, or
-    competition for system or program resources, or due to internal
-    limitations of Perl (for example, many modules that use source code
-    filters are mutually incompatible).
-
-None reported.
-
-
-=head1 BUGS AND LIMITATIONS
-
-=for author to fill in:
-    A list of known problems with the module, together with some
-    indication Whether they are likely to be fixed in an upcoming
-    release. Also a list of restrictions on the features the module
-    does provide: data types that cannot be handled, performance issues
-    and the circumstances in which they may arise, practical
-    limitations on the size of data sets, special cases that are not
-    (yet) handled, etc.
-
-No bugs have been reported.
-
-Please report any bugs or feature requests to
-C<bug-moose-poe-object@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
 
 =head1 AUTHOR
 
 Chris Prather  C<< <perigrin@cpan.org> >>
 
+Ash Berlin C<< <ash@cpan.org> >>
+
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2007, Chris Prather C<< <perigrin@cpan.org> >>. All rights reserved.
+Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
+C<< <ash@cpan.org> >>. All rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.

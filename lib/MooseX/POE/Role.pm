@@ -34,47 +34,6 @@ sub init_meta {
   );
 }
 
-=for comment
-
-if (0) {
-    my $CALLER;
-    my %exports = (
-        event => sub {
-            my $class = $CALLER;
-            return subname 'MooseX::POE::Role::event' => sub ($&) {
-            };
-        },
-    );
-
-    my $exporter = Sub::Exporter::build_exporter(
-        {
-            exports => \%exports,
-            groups  => { default => [':all'] }
-        }
-    );
-
-    sub import {
-        my ( $pkg ) = @_;
-        $CALLER = caller();
-        strict->import;
-        warnings->import;
-
-        return if $CALLER eq 'main';
-
-        my $meta_class   = 'MooseX::POE::Meta::Role';
-        my $meta = Moose::Role->init_meta(for_class => $CALLER, metaclass => $meta_class);
-
-        ## no critic
-        eval qq{package $CALLER; use POE; };
-        ## use critic
-        die $@ if $@;
-
-        goto $exporter;
-    }
-}
-
-=cut
-
 no Moose::Role;
 
 1;
@@ -97,7 +56,7 @@ MooseX::POE::Role - Eventful roles
   
 =head1 DESCRIPTION
 
-This is what Moose::Role is to Moose but with MooseX::POE.
+This is what MooseX::POE is to Moose but with Moose::Role.
 
 =head1 KEYWORDS
 
@@ -110,3 +69,22 @@ Create an event handler named $name.
 =back
 
 =cut
+
+=head1 SEE ALSO
+
+L<MooseX::POE>
+
+=head1 AUTHOR
+
+Chris Prather  C<< <perigrin@cpan.org> >>
+
+Ash Berlin C<< <ash@cpan.org> >>
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
+C<< <ash@cpan.org> >>. All rights reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself. See L<perlartistic>.
+
