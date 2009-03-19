@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# written by LordVorp on irc.perl.org
+# written by Rob Bloodgood aka LordVorp on irc.perl.org
 # based upon http://poe.perl.org/?POE_Cookbook/Serial_Ports
 
 package SerialWatcher;
@@ -113,7 +113,7 @@ event got_console => sub {
 };
 
 event got_error => sub {
-    my ( $self, @args) = @_;    # [OBJECT, ARG0...ARGN ];
+    my ( $self, @args) = @_;    # [OBJECT, ARG0...$#_ ];
 
     $self->console->put("$args[0] error $args[1]: $args[2]");
     $self->console->put("Bye!");
