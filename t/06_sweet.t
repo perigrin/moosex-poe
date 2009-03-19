@@ -1,11 +1,11 @@
 #!/usr/bin/env perl
 use strict;
-use Test::More 'no_plan';
+use Test::More tests => 3;
 
 {
   package Counter;
-  use metaclass 'MooseX::POE::SweetArgs';
-  use MooseX::POE;
+  #use metaclass 'MooseX::POE::SweetArgs';
+  use MooseX::POE::SweetArgs;
 
   has count => (is => 'rw', default => 1);
 
@@ -21,7 +21,7 @@ use Test::More 'no_plan';
     $self->count( $self->count + $n );
   };
 
-  no MooseX::POE;
+  no MooseX::POE::SweetArgs;
 }
 
 my $counter = Counter->new;

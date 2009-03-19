@@ -14,17 +14,6 @@ around default_events => sub {
     return $events;
 };
 
-#around initialize => sub {
-#    my ($next, $class, $pkg) = (shift, shift, shift);
-#
-#    $next->(
-#        $class, 
-#        $pkg,
-#        'instance_metaclass' => 'MooseX::POE::Meta::Instance',
-#        @_
-#    );
-#};
-#
 around add_role => sub {
   my ($next, $self, $role) = @_;
   

@@ -4,6 +4,7 @@ use Test::More 'no_plan';
 my $count         = 0;
 my $max_sessions  = 30;
 my $half_sessions = int( $max_sessions / 2 );
+my $fork_ran_at_least_one = 0;
 
 my %english = (
     lose   => 'is losing',
@@ -30,7 +31,7 @@ my %english = (
         $poe_kernel->sig( 'INT',    'on_signal_handler' );
         $poe_kernel->sig( 'ZOMBIE', 'on_signal_handler' );
 
-        ::pass( 'Started  ' . $_[0]->id );
+        ::pass( 'Started ' . $_[0]->id );
     }
 
     sub STOP {
@@ -72,6 +73,7 @@ my %english = (
     };
 
     event fork => sub {
+        $fork_ran_at_least_one++;
         my ( $kernel, $self ) = @_[ KERNEL, OBJECT ];
 
         if ( $count < $max_sessions ) {
@@ -115,4 +117,7 @@ my %english = (
 
 ForkBomber->new;
 POE::Kernel->run;
+
+# A.k.a. 'the we actualy did something test'
+ok($fork_ran_at_least_one, "We had at least one fork");
 __END__

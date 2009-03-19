@@ -11,10 +11,6 @@ sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
 
 sub STARTALL {
-    # NOTE: we ask Perl if we even 
-    # need to do this first, to avoid
-    # extra meta level calls
-  return unless $_[0]->can('START');    
   my ($self, @params) = @_;
   foreach my $method (reverse $self->meta->find_all_methods_by_name('START')) {
     $method->{code}->($self, @params);
@@ -23,10 +19,6 @@ sub STARTALL {
 
 
 sub STOPALL {
-    # NOTE: we ask Perl if we even 
-    # need to do this first, to avoid
-    # extra meta level calls
-  return unless $_[0]->can('STOP');    
   my ($self, $params) = @_;
   foreach my $method (reverse $self->meta->find_all_methods_by_name('STOP')) {
     $method->{code}->($self, $params);
@@ -55,13 +47,7 @@ __END__
 
 =head1 NAME
 
-MooseX::POE::Object - The base class for MooseX::Poe
-
-
-=head1 VERSION
-
-This document describes Moose::POE::Object version 0.0.1
-
+MooseX::POE::Meta::Trait::Object - The base class for MooseX::Poe
 
 =head1 SYNOPSIS
 

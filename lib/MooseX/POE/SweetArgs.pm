@@ -1,15 +1,25 @@
 package MooseX::POE::SweetArgs;
 
-use Moose;
-extends qw(MooseX::POE::Meta::Class);
+use Moose ();
+use MooseX::POE;
+use Moose::Exporter;
 
-around add_state_method => sub {
-  my $orig = shift;
-  my ($self, $name, $method) = @_;
-  $orig->($self, $name, sub {
-    $method->(@_[POE::Session::OBJECT(), POE::Session::ARG0()..$#_])
-  });
-}; 
+
+Moose::Exporter->setup_import_methods(
+    also        => 'MooseX::POE',
+);
+
+sub init_meta {
+    my ($class, %args) = @_;
+    MooseX::POE->init_meta(%args);
+    $DB::single = 1;
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+      for_class => $args{for_class},
+      metaclass_roles => [ 'MooseX::POE::Meta::Trait::SweetArgs' ],
+    );
+}
+
 
 1;
 
@@ -29,6 +39,8 @@ MooseX::POE::SweetArgs - sugar around MooseX::POE event arguments
   event on_success => sub {
     # unpack args like a Perl sub, not a POE event
     my ($self, $foo, $bar) = @_;
+    ...
+    POE::Kernel->yield('foo');
     ...
   };
 

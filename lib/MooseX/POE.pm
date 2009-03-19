@@ -21,12 +21,6 @@ sub init_meta {
     Moose->init_meta(
       for_class => $for
     );
-    #my $meta = Moose->init_meta(
-    #    %args,
-    #    metaclass  => 'MooseX::POE::Meta::Class',
-    #    #base_class => 'MooseX::POE::Object'
-    #);
-
 
     Moose::Util::MetaRole::apply_metaclass_roles(
       for_class => $for,
@@ -35,6 +29,7 @@ sub init_meta {
         'MooseX::POE::Meta::Trait::Instance',
       ],
     );
+
     Moose::Util::MetaRole::apply_base_class_roles(
       for_class => $for,
       roles => ['MooseX::POE::Meta::Trait::Object']

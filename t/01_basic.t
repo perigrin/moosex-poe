@@ -1,5 +1,8 @@
 use strict;
-use Test::More tests => 42;
+use Test::More;
+my $mem_cycle = eval { require Test::Memory::Cycle } || 0;
+my $num_objs = 10;
+plan tests => 9*$num_objs + $mem_cycle *2;
 
 {
 
@@ -31,9 +34,9 @@ use Test::More tests => 42;
 
     sub on_dec {
         my ($self) = $_[OBJECT];
-        ::pass('decrement');
-		$self->count($self->count - 1 );
-		$self->yield('inc');
+        ::pass( $self . ':' . $self->count );
+        $self->count($self->count - 1 );
+        $self->yield('inc');
     }
 
     sub STOP {
@@ -43,9 +46,8 @@ use Test::More tests => 42;
     no MooseX::POE;
 }
 
-my @objs = map { Counter->new } ( 1 .. 10 );
+my @objs = map { Counter->new } ( 1 .. $num_objs );# .. 10 );
 
-my $mem_cycle = eval { require Test::Memory::Cycle };
 
 Test::Memory::Cycle::memory_cycle_ok(\@objs, "no memory cycles") if $mem_cycle;
 

@@ -17,16 +17,25 @@ sub create_instance {
 sub get_new_session {
     my ( $self, $instance ) = @_;
     my $meta = $self->associated_metaclass;
+
+    my $wanted_role = 'MooseX::Async::Meta::Trait';
+
+    # This horrible grep can be removed once Moose gets more metacircular.
+    # Currently Moose::Meta::Class->meta isn't a MMC. It should be, and it
+    # should also be a Moose::Object so does works on it.
+    my %events = 
+      map { my $m = $_; map { $_ => $m->get_state_method_name($_) } $m->get_events } 
+      grep { $_->meta->can('does_role') && $_->meta->does_role($wanted_role) } 
+      map { $_->meta } 
+      $meta->linearized_isa;
+
     return POE::Session->create(
         inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
         object_states => [
             $instance => {
+              %events,
               STARTALL => 'STARTALL',
               _stop  => 'STOPALL',
-                map { $_ => $meta->get_state_method_name($_) }
-                  map  { $_->meta->get_events }
-                  grep { $_->meta->isa('MooseX::POE::Meta::Class') }
-                  $meta->linearized_isa
             },
         ],
         args => [$instance],
