@@ -22,7 +22,7 @@ role Rollo {
 
 does_ok(Rollo->meta, "MooseX::POE::Meta::Role");
 
-class App with Rollo is mutable {
+class App with Rollo {
     use MooseX::POE;
 
     sub START { 

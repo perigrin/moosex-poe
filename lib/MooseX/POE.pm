@@ -23,9 +23,8 @@ sub init_meta {
     Moose::Util::MetaRole::apply_metaclass_roles(
       for_class => $for,
       metaclass_roles => [ 'MooseX::POE::Meta::Trait::Class' ],
-      instance_metaclass_roles => [
-        'MooseX::POE::Meta::Trait::Instance',
-      ],
+      constructor_class_roles => [ 'MooseX::POE::Meta::Trait::Constructor' ],
+      instance_metaclass_roles => [ 'MooseX::POE::Meta::Trait::Instance' ],
     );
 
     Moose::Util::MetaRole::apply_base_class_roles(
