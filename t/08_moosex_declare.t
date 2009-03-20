@@ -20,10 +20,13 @@ role Rollo {
     event yarr => sub { ::pass("yarr!") }
 }
 
-class App with Rollo {
+does_ok(Rollo->meta, "MooseX::POE::Meta::Role");
+
+class App with Rollo is mutable {
     use MooseX::POE;
 
-    method START { 
+    sub START { 
+        my ($self) = $_[OBJECT];
         ::pass('START');
         $self->foo();
         $self->yield('next');
@@ -35,11 +38,9 @@ class App with Rollo {
         $self->yield("yarr");
     };
     
-    method STOP { ::pass('STOP') }
+    sub STOP { ::pass('STOP') }
 }
 
 my $obj = App->new;
 
-does_ok($obj, 'Rollo');
-$DB::single = 1;
 POE::Kernel->run;

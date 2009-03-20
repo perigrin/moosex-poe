@@ -102,7 +102,7 @@ Create an event handler named $name.
 
 =head1 METHODS
 
-Default POE-related methods are provided by L<MooseX::POE::Meta::TraitObject>
+Default POE-related methods are provided by L<MooseX::POE::Meta::Trait::Object>
 which is applied to your base class (which is usually L<Moose::Object>) when
 you use this module. See that module for the documentation for. Below is a list
 of methods on that class so you know what to look for:
