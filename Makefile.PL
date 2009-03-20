@@ -10,7 +10,6 @@ requires 'Moose'         => '0.26';
 requires 'MooseX::Async' => '0.01';
 requires 'POE'           => '0.9999';
 requires 'Sub::Name'     => '0.04';
-requires 'Sub::Exporter' => '0.981';
 
 build_requires 'Test::More' => '0.42';
 

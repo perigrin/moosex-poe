@@ -6,20 +6,23 @@ use overload ();
 use POE;
 
 has alias => (
-    isa => "Str|Undef",
+    isa => "Maybe[Str]",
     is  => "rw",
     builder     => "_build_alias",
     clearer     => "clear_alias",
-    initializer => sub {
-        my ( $self, $alias, $cb, $attr ) = @_;
-        $cb->($alias);
-        $self->call( _update_alias => $alias );
-    },
+    predicate   => "has_alias",
     trigger => sub {
         my ( $self, $alias ) = @_;
         $self->call( _update_alias => $alias );
     }
 );
+
+sub BUILD {
+    my ($self) = @_;
+
+    $self->call( _update_alias => $self->alias )
+      if $self->has_alias;
+}
 
 sub _build_alias {
     my $self = shift;

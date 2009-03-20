@@ -5,44 +5,6 @@ use POE;
 
 use Scalar::Util ();
 
-sub create_instance {
-    my $self = shift;
-    my $instance = $self->bless_instance_structure( {} );
-    my $session = $self->get_new_session($instance);
-    $instance->{heap} = $session->get_heap;
-    $instance->{session_id} = $session->ID;
-    return $instance;
-}
-
-sub get_new_session {
-    my ( $self, $instance ) = @_;
-    my $meta = $self->associated_metaclass;
-
-    my $wanted_role = 'MooseX::Async::Meta::Trait';
-
-    # This horrible grep can be removed once Moose gets more metacircular.
-    # Currently Moose::Meta::Class->meta isn't a MMC. It should be, and it
-    # should also be a Moose::Object so does works on it.
-    my %events = 
-      map { my $m = $_; map { $_ => $m->get_state_method_name($_) } $m->get_events } 
-      grep { $_->meta->can('does_role') && $_->meta->does_role($wanted_role) } 
-      map { $_->meta } 
-      $meta->linearized_isa;
-
-    return POE::Session->create(
-        inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
-        object_states => [
-            $instance => {
-              %events,
-              STARTALL => 'STARTALL',
-              _stop  => 'STOPALL',
-            },
-        ],
-        args => [$instance],
-        heap => {},
-    );
-}
-
 sub get_session_id {
     my ( $self, $instance ) = @_;
     return $instance->{session_id};
@@ -73,6 +35,7 @@ sub inline_slot_access {
     sprintf '%s->{heap}{%s}', $instance, $slot_name;
 }
 
+no POE;
 no Moose::Role;
 1;
 __END__

@@ -2,7 +2,7 @@ use strict;
 use Test::More;
 my $mem_cycle = eval { require Test::Memory::Cycle } || 0;
 my $num_objs = 10;
-plan tests => 9*$num_objs + $mem_cycle *2;
+plan tests => 10*$num_objs + $mem_cycle *2;
 
 {
 
@@ -16,11 +16,16 @@ plan tests => 9*$num_objs + $mem_cycle *2;
         default => sub { 1 },
     );
 
+    has foo => (
+      is => 'rw'
+    );
+
     sub START {
         my ($self, $kernel, $session) = @_[OBJECT, KERNEL, SESSION];
         ::pass('Starting ');
         ::isa_ok($kernel, "POE::Kernel", "kernel in START");
         ::isa_ok($session, "POE::Session", "session in START");
+        ::is($self->foo, 1, "foo attribute has correct value");
         $self->yield('dec');
     }
 
@@ -46,7 +51,7 @@ plan tests => 9*$num_objs + $mem_cycle *2;
     no MooseX::POE;
 }
 
-my @objs = map { Counter->new } ( 1 .. $num_objs );# .. 10 );
+my @objs = map { Counter->new(foo => 1) } ( 1 .. $num_objs );# .. 10 );
 
 
 Test::Memory::Cycle::memory_cycle_ok(\@objs, "no memory cycles") if $mem_cycle;
