@@ -1,6 +1,6 @@
 package MooseX::POE;
 
-our $VERSION = 0.100;
+our $VERSION = 0.200;
 
 use Moose ();
 use Moose::Exporter;
@@ -48,7 +48,7 @@ MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes MooseX::POE version 0.100
+This document describes MooseX::POE version 0.200
 
 =head1 SYNOPSIS
 

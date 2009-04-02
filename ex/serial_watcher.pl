@@ -3,8 +3,7 @@
 # based upon http://poe.perl.org/?POE_Cookbook/Serial_Ports
 
 package SerialWatcher;
-use metaclass 'MooseX::POE::SweetArgs';
-use MooseX::POE;
+use MooseX::POE::SweetArgs;
 
 use Symbol qw(gensym);
 use Device::SerialPort;
