@@ -13,7 +13,7 @@ plan tests => 6;
 
 
 role Rollo {
-    use MooseX::POE::Role;
+    use MooseX::POE::Role qw(event);
     
     sub foo { ::pass('foo!')}
 
@@ -23,7 +23,7 @@ role Rollo {
 does_ok(Rollo->meta, "MooseX::POE::Meta::Role");
 
 class App with Rollo {
-    use MooseX::POE;
+    use MooseX::POE qw(event);
 
     sub START { 
         my ($self) = $_[OBJECT];
