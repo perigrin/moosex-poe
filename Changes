@@ -1,5 +1,9 @@
 Revision history for MooseX-POE
 
+0.201 2009-04-02
+	+ Fix warnings thrown by the MooseX::Declare tests (perigrin)
+	+ Update POD to include the caveats with MooseX::Declare (perigrin)
+
 0.200 2009-04-02
   + Fairly substantial re-write of the internals (ash)
     + Made everything a Metaclass Role / Trait. This will break backwards
