@@ -81,13 +81,44 @@ This document describes MooseX::POE version 0.200
     };
 
     no MooseX::POE;
-    
+
     Counter->new();
     POE::Kernel->run();
-  
+
+or with L<MooseX::Declare|MooseX::Declare>:
+
+    class Counter {
+        use MooseX::POE::SweetArgs qw(event);
+        
+        has name => (
+            isa     => 'Str',
+            is      => 'rw',
+            default => sub { 'Foo ' },
+        );
+
+        has count => (
+            isa     => 'Int',
+            is      => 'rw',
+            lazy    => 1,
+            default => sub { 0 },
+        );
+        
+        sub START { 
+            my ($self) = @_;
+            $self->yield('increment')  
+        }
+        
+        event increment => sub {
+            my ($self) = @_;
+            print "Count is now " . $self->count . "\n";
+            $self->count( $self->count + 1 );
+            $self->yield('increment') unless $self->count > 3;            
+        }
+    }
+
 =head1 DESCRIPTION
 
-MooseX::POE::Object is a Moose wrapper around a POE::Session.
+MooseX::POE is a Moose wrapper around a POE::Session.
 
 =head1 KEYWORDS
 
@@ -101,8 +132,8 @@ Create an event handler named $name.
 
 =head1 METHODS
 
-Default POE-related methods are provided by L<MooseX::POE::Meta::Trait::Object>
-which is applied to your base class (which is usually L<Moose::Object>) when
+Default POE-related methods are provided by L<MooseX::POE::Meta::Trait::Object|MooseX::POE::Meta::Trait::Object>
+which is applied to your base class (which is usually L<Moose::Object|Moose::Object>) when
 you use this module. See that module for the documentation for. Below is a list
 of methods on that class so you know what to look for:
 
@@ -121,28 +152,53 @@ of methods on that class so you know what to look for:
 =back
 
 
+=head1 NOTES ON USAGE WITH L<MooseX::Declare|MooseX::Declare>
+
+L<MooseX::Declare|MooseX::Declare> support is still "experimental". Meaning that I don't use it,
+I don't have any code that uses it, and thus I can't adequately say that it
+won't cause monkeys to fly out of any orafices on your body beyond what the
+tests and the SYNOPSIS cover. 
+
+That said there are a few caveats that have turned up during testing. 
+
+1. The C<method> keyword doesn't seem to work as expected. I'm sure this is an
+integration issue that means I'm doing something naieve or that
+L<MooseX::Declare|MooseX::Declare> is, but still the point remains C<method> will cause
+explosions.
+
+2. MooseX::POE attempts to re-export L<Moose|Moose>, which
+L<MooseX::Declare|MooseX::Declare> has already exported in a custom fashion.
+This means that you'll get a keyword clash between the features that
+L<MooseX::Declare|MooseX::Declare> handles for you and the features that Moose
+handles. To work around this you'll need to write:
+
+    use MooseX::POE qw(event);
+    # or
+    use MooseX::POE::SweetArgs qw(event);
+    # or 
+    use MooseX::POE::Role qw(event);
+
+to keep MooseX::POE from exporting the sugar that L<MooseX::Declare|MooseX::Declare>
+doesn't like.
+
 =head1 DEPENDENCIES
 
-L<Moose>, L<POE>
+L<Moose|Moose> 
 
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported.
-
-Please report any bugs or feature requests to C<bug-moosex-poe@rt.cpan.org>, or
-through the web interface at L<http://rt.cpan.org>.
+L<POE|POE>
 
 =head1 AUTHOR
 
-Chris Prather  C<< <perigrin@cpan.org> >>
+Chris Prather  C<< <chris@prather.org> >>
 
 Ash Berlin C<< <ash@cpan.org> >>
 
+Yuval (nothingmuch) Kogman 
+
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
-C<< <ash@cpan.org> >>. All rights reserved.
+Copyright (c) 2007-2009, Chris Prather C<< <chris@prather.org> >>, Ash Berlin
+C<< <ash@cpan.org> >>, Yuval (nothingmuch) Kogman. Some rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.

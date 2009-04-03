@@ -24,17 +24,17 @@ role Rollo {
 does_ok(Rollo->meta, "MooseX::POE::Meta::Role");
 
 class App with Rollo {
-    use MooseX::POE qw(event);
+    use MooseX::POE::SweetArgs qw(event);
 
     sub START { 
-        my ($self) = $_[OBJECT];
+        my ($self) = @_;
         ::pass('START');
         $self->foo();
         $self->yield('next');
     }
     
     event next => sub {
-        my ($self) = $_[OBJECT];
+        my ($self) = @_;
         ::pass('next');
         $self->yield("yarr");
     };
