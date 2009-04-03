@@ -7,13 +7,12 @@ all_from 'lib/MooseX/POE.pm';
 
 # Specific dependencies
 requires 'Moose'         => '0.73';
-requires 'MooseX::Async' => '0.01';
-requires 'POE'           => '0.9999';
+requires 'MooseX::Async' => '0.07';
+requires 'POE'           => '1.04';
 requires 'Sub::Name'     => '0.04';
 
 build_requires 'Test::More' => '0.42';
 
 no_index 'directory' => 'ex';
 
-auto_install;
 WriteAll;
