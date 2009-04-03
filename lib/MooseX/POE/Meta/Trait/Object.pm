@@ -3,21 +3,22 @@ package MooseX::POE::Meta::Trait::Object;
 use Moose::Role;
 
 sub new {
-    my $class = shift;
+    my $class  = shift;
     my $params = $class->BUILDARGS(@_);
-    my $self = $class->meta->new_object($params);
+    my $self   = $class->meta->new_object($params);
 
     my $session = POE::Session->create(
-        inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
+        inline_states =>
+            { _start => sub { POE::Kernel->yield('STARTALL') }, },
         object_states => [
             $self => {
-              $self->meta->get_all_events,
-              STARTALL => 'STARTALL',
-              _stop  => 'STOPALL',
+                $self->meta->get_all_events,
+                STARTALL => 'STARTALL',
+                _stop    => 'STOPALL',
             },
         ],
         args => [$self],
-        heap => ($self->{heap} ||= {}),
+        heap => ( $self->{heap} ||= {} ),
     );
     $self->{session_id} = $session->ID;
 
@@ -34,33 +35,38 @@ sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
 
 sub STARTALL {
-  my ($self, @params) = @_;
-  foreach my $method (reverse $self->meta->find_all_methods_by_name('START')) {
-    $method->{code}->($self, @params);
-  }
+    my ( $self, @params ) = @_;
+    foreach
+        my $method ( reverse $self->meta->find_all_methods_by_name('START') )
+    {
+        $method->{code}->( $self, @params );
+    }
 }
-
 
 sub STOPALL {
-  my ($self, $params) = @_;
-  foreach my $method (reverse $self->meta->find_all_methods_by_name('STOP')) {
-    $method->{code}->($self, $params);
-  }
+    my ( $self, $params ) = @_;
+    foreach
+        my $method ( reverse $self->meta->find_all_methods_by_name('STOP') ) {
+        $method->{code}->( $self, $params );
+    }
 }
 
-sub START {}
-sub STOP {}
+sub START { }
+sub STOP  { }
 
 # __PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
 
-__PACKAGE__->meta->alias_method( _default => 'DEFAULT' )
-  if __PACKAGE__->meta->has_method('DEFAULT');
+__PACKAGE__->meta->add_method(
+    _default => __PACKAGE__->meta->get_method('DEFAULT') )
+    if __PACKAGE__->meta->has_method('DEFAULT');
 
-__PACKAGE__->meta->alias_method( _child => 'CHILD' )
-  if __PACKAGE__->meta->has_method('CHILD');
+__PACKAGE__->meta->add_method(
+    _child => __PACKAGE__->meta->get_method('CHILD') )
+    if __PACKAGE__->meta->has_method('CHILD');
 
-__PACKAGE__->meta->alias_method( _parent => 'PARENT' )
-  if __PACKAGE__->meta->has_method('PARENT');
+__PACKAGE__->meta->add_method(
+    _parent => __PACKAGE__->meta->get_method('PARENT') )
+    if __PACKAGE__->meta->has_method('PARENT');
 
 no Moose::Role;
 
