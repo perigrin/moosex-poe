@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 use strict;
 use Test::More;
 my $mem_cycle = eval { require Test::Memory::Cycle } || 0;
