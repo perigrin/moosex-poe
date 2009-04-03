@@ -4,7 +4,6 @@ use Test::More tests => 3;
 
 {
   package Counter;
-  #use metaclass 'MooseX::POE::SweetArgs';
   use MooseX::POE::SweetArgs;
 
   has count => (is => 'rw', default => 1);
