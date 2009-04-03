@@ -1,5 +1,13 @@
 Revision history for MooseX-POE
 
+0.202 ???
+    + Change alias_method to add_method as that's not been deprecated (perigrin)
+    + Clean up the SYNOPSIS a bit, the name attribute was useless.
+
+0.201 2009-04-02
+    + Document the hell out of MooseX::Declare weirdness (perigrin)
+    + Update the rest of the documentation including authors and whatnot (perigrin)
+
 0.200 2009-04-02
   + Fairly substantial re-write of the internals (ash)
     + Made everything a Metaclass Role / Trait. This will break backwards

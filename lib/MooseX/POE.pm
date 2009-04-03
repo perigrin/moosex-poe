@@ -1,6 +1,6 @@
 package MooseX::POE;
 
-our $VERSION = 0.200;
+our $VERSION = 0.202;
 
 use Moose ();
 use Moose::Exporter;
@@ -55,12 +55,6 @@ This document describes MooseX::POE version 0.200
     package Counter;
     use MooseX::POE;
 
-    has name => (
-        isa     => 'Str',
-        is      => 'rw',
-        default => sub { 'Foo ' },
-    );
-
     has count => (
         isa     => 'Int',
         is      => 'rw',
@@ -90,12 +84,6 @@ or with L<MooseX::Declare|MooseX::Declare>:
     class Counter {
         use MooseX::POE::SweetArgs qw(event);
         
-        has name => (
-            isa     => 'Str',
-            is      => 'rw',
-            default => sub { 'Foo ' },
-        );
-
         has count => (
             isa     => 'Int',
             is      => 'rw',
@@ -161,10 +149,10 @@ tests and the SYNOPSIS cover.
 
 That said there are a few caveats that have turned up during testing. 
 
-1. The C<method> keyword doesn't seem to work as expected. I'm sure this is an
-integration issue that means I'm doing something naieve or that
-L<MooseX::Declare|MooseX::Declare> is, but still the point remains C<method> will cause
-explosions.
+1. The C<method> keyword doesn't seem to work as expected. This is an
+integration issue that is being resolved but I want to wait for
+L<MooseX::Declare|MooseX::Declare> to gain some more polish on their slurpy
+arguments.
 
 2. MooseX::POE attempts to re-export L<Moose|Moose>, which
 L<MooseX::Declare|MooseX::Declare> has already exported in a custom fashion.
@@ -178,8 +166,10 @@ handles. To work around this you'll need to write:
     # or 
     use MooseX::POE::Role qw(event);
 
-to keep MooseX::POE from exporting the sugar that L<MooseX::Declare|MooseX::Declare>
-doesn't like.
+to keep MooseX::POE from exporting the sugar that
+L<MooseX::Declare|MooseX::Declare> doesn't like. This is fixed in the Git
+version of L<MooseX::Declare|MooseX::Declare> but that version (as of this
+writing) is not on the CPAN.
 
 =head1 DEPENDENCIES
 
