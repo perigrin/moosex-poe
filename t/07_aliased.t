@@ -3,30 +3,33 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
+use Test::Exception;
 
 use POE;
 
 my @log;
 
 {
+
     package Foo;
     use MooseX::POE;
 
     with qw(MooseX::POE::Aliased);
 
     event foo => sub {
-        push @log, [ @_[ARG0 .. $#_ ] ];
+        push @log, [ @_[ ARG0 .. $#_ ] ];
     };
 }
 {
+
     package ImmutableFoo;
     use MooseX::POE;
 
     with qw(MooseX::POE::Aliased);
 
     event foo => sub {
-        push @log, [ @_[ARG0 .. $#_ ] ];
+        push @log, [ @_[ ARG0 .. $#_ ] ];
     };
 
     __PACKAGE__->meta->make_immutable;
@@ -76,4 +79,24 @@ is( scalar(@log), 2, "two events" );
 
 is_deeply( $log[0], ["this"], "first event under alias 'blah'" );
 is_deeply( $log[1], ["that"], "second event under alias 'bar'" );
+
+{
+    sub POE::Kernel::ASSERT_DEFAULT () { 1 }
+
+    package Aliased;
+    use MooseX::POE;
+
+    with qw/MooseX::POE::Aliased/;
+
+    has foo => ( is => 'rw', isa => 'Str', default => '' );
+    has bar => ( is => 'rw', isa => 'Int', default => 0 );
+
+    no MooseX::POE;
+
+}
+
+lives_ok { Aliased->new( alias => 'alias' ) }
+'can create Aliased with ASSERT_DEFAULT';
+
+$poe_kernel->run;
 
