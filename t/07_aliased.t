@@ -81,7 +81,9 @@ is_deeply( $log[0], ["this"], "first event under alias 'blah'" );
 is_deeply( $log[1], ["that"], "second event under alias 'bar'" );
 
 {
-    sub POE::Kernel::ASSERT_DEFAULT () { 1 }
+    if ( ! defined &POE::Kernel::ASSERT_DEFAULT ) {
+        eval 'sub POE::Kernel::ASSERT_DEFAULT () { 1 }';
+    }
 
     package Aliased;
     use MooseX::POE;
