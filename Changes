@@ -3,6 +3,9 @@ Revision history for MooseX-POE
 0.202 ???
     + Change alias_method to add_method as that's not been deprecated (perigrin)
     + Clean up the SYNOPSIS a bit, the name attribute was useless.
+    + Changes to keep constructor inlining working with latest Moose &
+      Class::MOP. This module will still work with any Moose from 0.74
+      on up.
 
 0.201 2009-04-02
     + Document the hell out of MooseX::Declare weirdness (perigrin)

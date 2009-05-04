@@ -29,8 +29,6 @@ MooseX::POE::SweetArgs - sugar around MooseX::POE event arguments
 =head1 SYNOPSIS
 
   package Thing;
-
-  # must come before MooseX::POE!
   use MooseX::POE::SweetArgs;
 
   # declare events like usual
@@ -68,6 +66,8 @@ L<MooseX::POE>
 Chris Prather  C<< <perigrin@cpan.org> >>
 
 Ash Berlin C<< <ash@cpan.org> >>
+
+Hans Dieter Pearcey
 
 =head1 LICENCE AND COPYRIGHT
 
