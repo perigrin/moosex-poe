@@ -1,6 +1,11 @@
 Revision history for MooseX-POE
 
-0.202 ???
+0.203 2009-05-30
+	+ Add stubbed documentation for metaclasses (perigrin)
+	+ Clean up aliased test to set inline_constructor => 0 (perigrin)
+	+ Update Makefile.PL to include AutoManifest and Repository (perigrin)
+
+0.202 2009-05-11
     + Change alias_method to add_method as that's not been deprecated (perigrin)
     + Clean up the SYNOPSIS a bit, the name attribute was useless.
     + Changes to keep constructor inlining working with latest Moose &

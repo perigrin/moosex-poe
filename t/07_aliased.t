@@ -32,7 +32,7 @@ my @log;
         push @log, [ @_[ ARG0 .. $#_ ] ];
     };
 
-    __PACKAGE__->meta->make_immutable;
+    __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 }
 
 my $foo = Foo->new( alias => "blah" );
@@ -81,9 +81,8 @@ is_deeply( $log[0], ["this"], "first event under alias 'blah'" );
 is_deeply( $log[1], ["that"], "second event under alias 'bar'" );
 
 {
-    if ( ! defined &POE::Kernel::ASSERT_DEFAULT ) {
-        eval 'sub POE::Kernel::ASSERT_DEFAULT () { 1 }';
-    }
+    no warnings 'redefine';
+    sub POE::Kernel::ASSERT_DEFAULT () { 1 }
 
     package Aliased;
     use MooseX::POE;
