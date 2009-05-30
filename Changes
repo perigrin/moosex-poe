@@ -4,6 +4,7 @@ Revision history for MooseX-POE
 	+ Add stubbed documentation for metaclasses (perigrin)
 	+ Clean up aliased test to set inline_constructor => 0 (perigrin)
 	+ Update Makefile.PL to include AutoManifest and Repository (perigrin)
+	+ Clean out Object Deferred since it's been broken and nobody noticed (perigrin)
 
 0.202 2009-05-11
     + Change alias_method to add_method as that's not been deprecated (perigrin)
