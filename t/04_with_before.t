@@ -1,7 +1,10 @@
 use strict;
-use Test::More tests=> 3;
+use Test::More skip_all => 'Moose upstream needs to sort out composition';
+
+use Test::More tests => 3;
 
 {
+
     package Rollo;
     use MooseX::POE::Role;
 
@@ -11,6 +14,7 @@ use Test::More tests=> 3;
 }
 
 {
+
     package App;
     use MooseX::POE;
     with 'Rollo';
