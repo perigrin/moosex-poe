@@ -1,6 +1,6 @@
 package MooseX::POE;
 
-our $VERSION = '0.203';
+our $VERSION = '0.204';
 
 use Moose ();
 use Moose::Exporter;

@@ -1,5 +1,8 @@
 Revision history for MooseX-POE
 
+0.204 2009-06-12
+     - remove auto_install at nothingmuch's request
+
 0.203 2009-05-30
 	+ Add stubbed documentation for metaclasses (perigrin)
 	+ Clean up aliased test to set inline_constructor => 0 (perigrin)
