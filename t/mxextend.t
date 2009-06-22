@@ -30,13 +30,13 @@ my ($base_start_called, $extended_start_called);
     $_[KERNEL]->yield('foo');
   };
 
+  sub on_bar {
+    ::pass('on_bar');
+  }
+
   sub on_foo {
     ::pass('on_foo');
     $_[KERNEL]->yield('bar');
-  }
-
-  sub on_bar {
-    ::pass('on_bar');
   }
 
 }

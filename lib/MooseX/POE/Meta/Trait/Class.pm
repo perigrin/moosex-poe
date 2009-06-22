@@ -45,6 +45,7 @@ sub get_all_events {
         $_->meta->can('does_role') && $_->meta->does_role($wanted_role)
         }
         map { $_->meta } $self->linearized_isa;
+    return %events;
 }
 
 no Moose::Role;
