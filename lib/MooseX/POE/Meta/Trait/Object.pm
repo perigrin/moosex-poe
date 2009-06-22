@@ -36,6 +36,7 @@ sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
 
 sub STARTALL {
     my ( $self, @params ) = @_;
+    $params[4] = pop @params;
     foreach
         my $method ( reverse $self->meta->find_all_methods_by_name('START') )
     {

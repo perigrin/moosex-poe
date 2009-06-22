@@ -23,7 +23,7 @@ around _generate_instance => sub {
 
     my $source = $orig->(@_) . <<"EOF"
 my \$session = POE::Session->create(
-    inline_states => { _start => sub { POE::Kernel->yield('STARTALL') }, },
+    inline_states => { _start => sub { POE::Kernel->yield('STARTALL', \$_[5] ) }, },
     object_states => [
       $var => { $events }
     ],
