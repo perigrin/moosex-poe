@@ -1,4 +1,8 @@
 Revision history for MooseX-POE
+0.205 2009-06-26
+	- Fix inheritance of events (BinGOs)
+		- Add tests (BinGOs)
+	- Make sure that SENDER in START methods is correct (BinGOs)	
 
 0.204 2009-06-12
      - remove auto_install at nothingmuch's request

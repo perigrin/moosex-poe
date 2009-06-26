@@ -1,6 +1,6 @@
 package MooseX::POE;
 
-our $VERSION = '0.204';
+our $VERSION = '0.205';
 
 use Moose ();
 use Moose::Exporter;
@@ -46,7 +46,7 @@ MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes MooseX::POE version 0.203
+This document describes MooseX::POE version 0.205
 
 =head1 SYNOPSIS
 
@@ -181,12 +181,15 @@ Chris Prather  C<< <chris@prather.org> >>
 
 Ash Berlin C<< <ash@cpan.org> >>
 
+Chris Williams C<<chris@bingosnet.co.uk>>
+
 Yuval (nothingmuch) Kogman 
 
 =head1 LICENCE AND COPYRIGHT
 
 Copyright (c) 2007-2009, Chris Prather C<< <chris@prather.org> >>, Ash Berlin
-C<< <ash@cpan.org> >>, Yuval (nothingmuch) Kogman. Some rights reserved.
+C<< <ash@cpan.org> >>, Chris Williams C<<chris@bingosnet.co.uk>>, Yuval
+(nothingmuch) Kogman. Some rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
