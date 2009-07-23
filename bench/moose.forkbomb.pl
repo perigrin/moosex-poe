@@ -2,7 +2,7 @@
 use strict;
 
 my $count         = 0;
-my $max_sessions  = 30;
+my $max_sessions  = 800;
 my $half_sessions = int( $max_sessions / 2 );
 
 my %english = (

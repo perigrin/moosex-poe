@@ -98,7 +98,7 @@ sub signal_handler {
 # This is the main part of the test.  This state uses the yield()
 # function to loop until certain conditions are met.
 
-my $max_sessions = 200;
+my $max_sessions = 800;
 my $half_sessions = int($max_sessions / 2);
 
 sub fork {
