@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Test::Moose;
 
 {
@@ -10,7 +10,9 @@ use Test::Moose;
     
     sub foo { ::pass('foo!')}
 
-    event yarr => sub { ::pass("yarr!") }
+    event yarr => sub { ::pass("yarr!"); shift->yield('matey'); };
+    event matey => sub { ::pass("matey!") };
+
 }
 
 {
