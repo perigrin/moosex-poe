@@ -2,7 +2,7 @@ package MooseX::POE::Meta::Trait::Class;
 
 use Moose::Role;
 
-with qw(MooseX::Async::Meta::Trait);
+with qw(MooseX::POE::Meta::Trait);
 
 # TODO: subclass events to be a hashref that maps the event to the method
 # so we can support on_ events
@@ -18,7 +18,7 @@ around add_role => sub {
     my ( $next, $self, $role ) = @_;
     $next->( $self, $role );
     if (   $role->meta->can('does_role')
-        && $role->meta->does_role("MooseX::Async::Meta::Trait") ) {
+        && $role->meta->does_role("MooseX::POE::Meta::Trait") ) {
         $self->add_event( $role->get_events );
     }
 };
@@ -31,7 +31,7 @@ around get_state_method_name => sub {
 
 sub get_all_events {
     my ($self) = @_;
-    my $wanted_role = 'MooseX::Async::Meta::Trait';
+    my $wanted_role = 'MooseX::POE::Meta::Trait';
 
     # This horrible grep can be removed once Moose gets more metacircular.
     # Currently Moose::Meta::Class->meta isn't a MMC. It should be, and it

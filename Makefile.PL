@@ -7,7 +7,6 @@ all_from 'lib/MooseX/POE.pm';
 
 # Specific dependencies
 requires 'Moose'         => '0.73';
-requires 'MooseX::Async' => '0.07';
 requires 'POE'           => '1.004';
 requires 'Sub::Name'     => '0.04';
 

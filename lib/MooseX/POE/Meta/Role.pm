@@ -1,6 +1,6 @@
 package MooseX::POE::Meta::Role;
 use Moose::Role;
-with qw(MooseX::Async::Meta::Trait);
+with qw(MooseX::POE::Meta::Trait);
 
 around default_events => sub {
     my ($orig, $self) = @_;
