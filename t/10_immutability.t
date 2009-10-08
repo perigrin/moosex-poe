@@ -6,7 +6,6 @@ use Test::More tests => 2;
     package mxpoe;
 
     use MooseX::POE;
-    use MooseX::AttributeHelpers;
     use Test::More;
 
     sub START {
