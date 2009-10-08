@@ -1,13 +1,18 @@
 package MooseX::POE;
 
-our $VERSION = '0.21';
+our $VERSION = '0.213';
 
 use Moose ();
 use Moose::Exporter;
 
-Moose::Exporter->setup_import_methods(
-    with_caller => [qw(event)],
-    also        => 'Moose',
+my ($import, $unimport, $init_meta) = Moose::Exporter->setup_import_methods(
+    with_caller              => [qw(event)],
+    also                     => 'Moose',
+    install                  => [qw(import unimport)],
+    metaclass_roles          => ['MooseX::POE::Meta::Trait::Class'],
+    constructor_class_roles  => ['MooseX::POE::Meta::Trait::Constructor'],
+    instance_metaclass_roles => ['MooseX::POE::Meta::Trait::Instance'],
+    base_class_roles         => ['MooseX::POE::Meta::Trait::Object'],
 );
 
 sub init_meta {
@@ -18,17 +23,7 @@ sub init_meta {
 
     Moose->init_meta( for_class => $for );
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                => $for,
-        metaclass_roles          => ['MooseX::POE::Meta::Trait::Class'],
-        constructor_class_roles  => ['MooseX::POE::Meta::Trait::Constructor'],
-        instance_metaclass_roles => ['MooseX::POE::Meta::Trait::Instance'],
-    );
-
-    Moose::Util::MetaRole::apply_base_class_roles(
-        for_class => $for,
-        roles     => ['MooseX::POE::Meta::Trait::Object']
-    );
+    goto $init_meta;
 }
 
 sub event {

@@ -1,40 +1,32 @@
 package MooseX::POE::Role;
-
 use MooseX::POE::Meta::Role;
 
 use Moose::Exporter;
 
-sub event ($&) {
-  my ( $class, $name, $method ) = @_;
-  $class->meta->add_state_method( $name => $method );
-}
-
-Moose::Exporter->setup_import_methods(
-  with_caller => [ qw/event/ ],
-  also => 'Moose::Role'
+my ( $import, $unimport, $init_meta ) = Moose::Exporter->setup_import_methods(
+    with_caller     => [qw(event)],
+    also            => 'Moose::Role',
+    install         => [qw(import unimport)],
+    metaclass_roles => ['MooseX::POE::Meta::Role'],
 );
 
 sub init_meta {
-  my ($class, %p) = @_;
+    my ( $class, %args ) = @_;
 
-  my $for = $p{for_class};
+    my $for = $args{for_class};
+    eval qq{package $for; use POE; };
 
-  eval qq{package $for; use POE; };
+    Moose::Role->init_meta( for_class => $for );
 
-  my $meta;
-  unless ($for->can('meta')) {
-    $meta = Moose::Role->init_meta(for_class => $for);
-  } else {
-    $meta = $for->meta;
-  }
-
-  Moose::Util::MetaRole::apply_metaclass_roles(
-    for_class => $p{for_class},
-    metaclass_roles => ['MooseX::POE::Meta::Role']
-  );
+    goto $init_meta;
 }
 
-no Moose::Role;
+sub event {
+    my ( $caller, $name, $method ) = @_;
+    my $class = Moose::Meta::Class->initialize($caller);
+    $class->add_state_method( $name => $method );
+}
+
 
 1;
 __END__
