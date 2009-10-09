@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 use strict;
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 {
 
@@ -9,21 +9,38 @@ use Test::More tests => 4;
 
     sub START {
         ::pass('Base Start');
-        $_[OBJECT]->yield( 'foo' => 'bar' );
     }
 
-    event foo => sub {
-        ::pass('foo');
+    event hello => sub {
+        ::pass('hello');
+        $_[KERNEL]->yield('goodbye');
+    };
+}
+{
+
+    package Extended;
+    use MooseX::POE;
+
+    extends 'Base';
+
+    sub START {
+        ::pass('Extended after Start');
+        $_[KERNEL]->yield( 'hello' => 'world' );
+    }
+
+    before 'hello' => sub {
+        ::is( $_[ARG0], 'world', 'before saw world' );
     };
 
-    before 'foo' => sub {
-        ::is( $_[ARG0], 'bar', 'before saw bar' );
+    after 'hello' => sub {
+        ::is( $_[ARG0], 'world', 'after saw world' );
     };
 
-    after 'foo' => sub {
-        ::is( $_[ARG0], 'bar', 'after saw bar' );
+    event goodbye => sub {
+        ::pass('goodbye');
     };
 
 }
-my $obj = Base->new();
+
+my $foo = Extended->new();
 POE::Kernel->run();
