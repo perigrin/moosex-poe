@@ -137,7 +137,7 @@ of methods on that class so you know what to look for:
 
 L<MooseX::Declare|MooseX::Declare> support is still "experimental". Meaning that I don't use it,
 I don't have any code that uses it, and thus I can't adequately say that it
-won't cause monkeys to fly out of any orafices on your body beyond what the
+won't cause monkeys to fly out of any orifices on your body beyond what the
 tests and the SYNOPSIS cover. 
 
 That said there are a few caveats that have turned up during testing. 
