@@ -97,6 +97,9 @@ or with L<MooseX::Declare|MooseX::Declare>:
         }
     }
 
+    Counter->new();
+    POE::Kernel->run();
+
 =head1 DESCRIPTION
 
 MooseX::POE is a Moose wrapper around a POE::Session.
