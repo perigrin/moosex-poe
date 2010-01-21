@@ -45,7 +45,7 @@ sub get_all_events {
         grep {
         $_->meta->can('does_role') && $_->meta->does_role($wanted_role)
         }
-        map { $_->meta } $self->linearized_isa;
+        map { $_->meta } grep { $_->can('meta') } $self->linearized_isa;
     return %events;
 }
 

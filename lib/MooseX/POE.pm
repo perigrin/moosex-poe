@@ -1,6 +1,6 @@
 package MooseX::POE;
 
-our $VERSION = '0.213';
+our $VERSION = '0.206';
 
 use Moose ();
 use Moose::Exporter;
@@ -11,7 +11,6 @@ my ($import, $unimport, $init_meta) = Moose::Exporter->setup_import_methods(
     install                  => [qw(import unimport)],
     metaclass_roles          => ['MooseX::POE::Meta::Trait::Class'],
     constructor_class_roles  => ['MooseX::POE::Meta::Trait::Constructor'],
-    instance_metaclass_roles => ['MooseX::POE::Meta::Trait::Instance'],
     base_class_roles         => ['MooseX::POE::Meta::Trait::Object'],
 );
 

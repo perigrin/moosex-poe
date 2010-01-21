@@ -2,10 +2,27 @@ package MooseX::POE::Meta::Trait::Object;
 
 use Moose::Role;
 
+# this one makes MooseX::Declare warn about around() not
+# propagating right.
+0 and around new => sub {
+    my $constructor = shift;
+    my $class = shift;
+
+    $class->$constructor(@_)->_start_object_session;
+};
+
 sub new {
     my $class  = shift;
     my $params = $class->BUILDARGS(@_);
     my $self   = $class->meta->new_object($params);
+
+    $self->_create_session_object->BUILDALL($params);
+
+    $self
+};
+
+sub _create_session_object {
+    my $self = shift;
 
     my $session = POE::Session->create(
         inline_states =>
@@ -22,13 +39,13 @@ sub new {
     );
     $self->{session_id} = $session->ID;
 
-    $self->BUILDALL($params);
     return $self;
 }
 
 sub get_session_id {
     my ($self) = @_;
-    return $self->meta->get_meta_instance->get_session_id($self);
+    # return $self->meta->get_meta_instance->get_session_id($self);
+    return $self->{session_id};
 }
 sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
@@ -127,7 +144,8 @@ functions.
 
 =item yield
 
-A cheap alias for POE::Kernel->yield() which will gurantee posting to the object's session.
+A cheap alias for POE::Kernel->yield() which will guarantee posting to
+the object's session.
 
 =item STARTALL
 
