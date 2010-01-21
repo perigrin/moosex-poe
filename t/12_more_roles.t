@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Test::More tests => 2;
+use Test::More tests => 1;
 {
     package Getty;
     use Moose::Role;
