@@ -15,6 +15,8 @@ sub new {
                 $self->meta->get_all_events,
                 STARTALL => 'STARTALL',
                 _stop    => 'STOPALL',
+                _child   => 'CHILD',
+                _parent  => 'PARENT',
             },
         ],
         args => [$self],
@@ -52,8 +54,10 @@ sub STOPALL {
     }
 }
 
-sub START { }
-sub STOP  { }
+sub START  { }
+sub STOP   { }
+sub CHILD  { }
+sub PARENT { }
 
 # __PACKAGE__->meta->add_method( _stop => sub { POE::Kernel->call('STOP') } );
 
