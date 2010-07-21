@@ -4,10 +4,12 @@ use MooseX::POE::Meta::Role;
 use Moose::Exporter;
 
 my ( $import, $unimport, $init_meta ) = Moose::Exporter->setup_import_methods(
-    with_caller     => [qw(event)],
-    also            => 'Moose::Role',
-    install         => [qw(import unimport)],
-    metaclass_roles => ['MooseX::POE::Meta::Role'],
+    with_caller    => [qw(event)],
+    also           => 'Moose::Role',
+    install        => [qw(import unimport)],
+    role_metaroles => {
+        role => ['MooseX::POE::Meta::Role'],
+    },
 );
 
 sub init_meta {

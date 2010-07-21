@@ -1,4 +1,8 @@
 Revision history for MooseX-POE
+
+?????
+    - Avoid warnings with Moose 1.09 (Dave Rolsky)
+
 0.205 2009-06-26
 	- Fix inheritance of events (BinGOs)
 		- Add tests (BinGOs)
