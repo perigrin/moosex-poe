@@ -17,7 +17,7 @@ around default_events => sub {
 around add_role => sub {
     my ( $next, $self, $role ) = @_;
     $next->( $self, $role );
-warn $role;
+
     if (   $role->meta->can('does_role')
         && $role->meta->does_role("MooseX::POE::Meta::Trait") ) {
         $self->add_event( $role->get_events );
