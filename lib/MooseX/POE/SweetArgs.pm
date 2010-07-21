@@ -13,9 +13,11 @@ sub init_meta {
     my ($class, %args) = @_;
     MooseX::POE->init_meta(%args);
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-      for_class => $args{for_class},
-      metaclass_roles => [ 'MooseX::POE::Meta::Trait::SweetArgs' ],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => $args{for_class},
+        class_metaroles => {
+            class => ['MooseX::POE::Meta::Trait::SweetArgs'],
+        },
     );
 }
 
