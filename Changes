@@ -1,7 +1,9 @@
 Revision history for MooseX-POE
 
-?????
+0.206 2010-07-27
     - Avoid warnings with Moose 1.09 (Dave Rolsky)
+    - fix CHILD and PARENT methods (xsawyerx)
+    - various doc/example/test fixes (Avar, perigrin, Getty)
 
 0.205 2009-06-26
 	- Fix inheritance of events (BinGOs)
