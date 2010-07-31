@@ -18,16 +18,7 @@ sub new {
                 _stop    => 'STOPALL',
                 _child   => 'CHILD',
                 _parent  => 'PARENT',
-                _alarm   => '_alarm',
-                _alarm_add => '_alarm_add',
-                _delay   => '_delay',
-                _delay_add => '_delay_add',
-                _alarm_set => '_alarm_set',
-                _alarm_adjust => '_alarm_adjust',
-                _alarm_remove => '_alarm_remove',
-                _alarm_remove_all => '_alarm_remove_all',
-                _delay_set => '_delay_set',
-                _delay_adjust => '_delay_adjust',
+                _call_kernel_with_my_session => '_call_kernel_with_my_session',
             },
         ],
         args => [$self],
@@ -48,35 +39,21 @@ sub yield { my $self = shift; POE::Kernel->post( $self->get_session_id, @_ ) }
 
 sub call { my $self = shift; POE::Kernel->call( $self->get_session_id, @_ ) }
 
-sub alarm { my $self = shift; $self->call( _alarm => @_ ) }
-sub _alarm { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->alarm( @args ) }
+sub _call_kernel_with_my_session {
+	my ( $self, $function, @args ) = @_[ OBJECT, ARG0..$#_ ];
+	POE::Kernel->$function( @args );
+}
 
-sub alarm_add { my $self = shift; $self->call( _alarm_add => @_ ) }
-sub _alarm_add { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->alarm_add( @args ) }
-
-sub delay { my $self = shift; $self->call( _delay => @_ ) }
-sub _delay { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->delay( @args ) }
-
-sub delay_add { my $self = shift; $self->call( _delay_add => @_ ) }
-sub _delay_add { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->delay_add( @args ) }
-
-sub alarm_set { my $self = shift; $self->call( _alarm_set => @_ ) }
-sub _alarm_set { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->alarm_set( @args ) }
-
-sub alarm_adjust { my $self = shift; $self->call( _alarm_adjust => @_ ) }
-sub _alarm_adjust { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->alarm_adjust( @args ) }
-
-sub alarm_remove { my $self = shift; $self->call( _alarm_remove => @_ ) }
-sub _alarm_remove { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->alarm_remove( @args ) }
-
-sub alarm_remove_all { my $self = shift; $self->call( _alarm_remove_all => @_ ) }
-sub _alarm_remove_all { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->alarm_remove_all( @args ) }
-
-sub delay_set { my $self = shift; $self->call( _delay_set => @_ ) }
-sub _delay_set { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->delay_set( @args ) }
-
-sub delay_adjust { my $self = shift; $self->call( _delay_adjust => @_ ) }
-sub _delay_adjust { my ( $self, @args ) = @_[ OBJECT, ARG0..$#_ ]; POE::Kernel->delay_adjust( @args ) }
+sub delay { my $self = shift; $self->call( _call_kernel_with_my_session => 'delay' => @_ ) }
+sub alarm { my $self = shift; $self->call( _call_kernel_with_my_session => 'alarm', @_ ) }
+sub alarm_add { my $self = shift; $self->call( _call_kernel_with_my_session => 'alarm_add', @_ ) }
+sub delay_add { my $self = shift; $self->call( _call_kernel_with_my_session => 'delay_add', @_ ) }
+sub alarm_set { my $self = shift; $self->call( _call_kernel_with_my_session => 'alarm_set', @_ ) }
+sub alarm_adjust { my $self = shift; $self->call( _call_kernel_with_my_session => 'alarm_adjust', @_ ) }
+sub alarm_remove { my $self = shift; $self->call( _call_kernel_with_my_session => 'alarm_remove', @_ ) }
+sub alarm_remove_all { my $self = shift; $self->call( _call_kernel_with_my_session => 'alarm_remove_all', @_ ) }
+sub delay_set { my $self = shift; $self->call( _call_kernel_with_my_session => 'delay_set', @_ ) }
+sub delay_adjust { my $self = shift; $self->call( _call_kernel_with_my_session => 'delay_adjust', @_ ) }
 
 sub STARTALL {
     my ( $self, @params ) = @_;
