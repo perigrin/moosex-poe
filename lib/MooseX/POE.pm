@@ -127,9 +127,34 @@ of methods on that class so you know what to look for:
 
 =item get_session_id
 
+Get the internal POE Session ID, this is useful to hand to other POE aware
+functions.
+
 =item yield
 
 =item call
+
+=item delay
+
+=item alarm
+
+=item alarm_add
+
+=item delay_add
+
+=item alarm_set
+
+=item alarm_adjust
+
+=item alarm_remove
+
+=item alarm_remove_all
+
+=item delay_set
+
+=item delay_adjust
+
+A cheap alias for the same POE::Kernel function which will gurantee posting to the object's session.
 
 =item STARTALL
 
