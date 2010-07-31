@@ -150,7 +150,29 @@ functions.
 
 =item yield
 
-A cheap alias for POE::Kernel->yield() which will gurantee posting to the object's session.
+=item call
+
+=item delay
+
+=item alarm
+
+=item alarm_add
+
+=item delay_add
+
+=item alarm_set
+
+=item alarm_adjust
+
+=item alarm_remove
+
+=item alarm_remove_all
+
+=item delay_set
+
+=item delay_adjust
+
+A cheap alias for the same POE::Kernel function which will gurantee posting to the object's session.
 
 =item STARTALL
 
@@ -184,9 +206,13 @@ Along similar lines to C<STARTALL>, but for C<STOP> instead.
 
 =head1 AUTHOR
 
-Chris Prather  C<< <perigrin@cpan.org> >>
+Chris Prather C<< <perigrin@cpan.org> >>
 
 Ash Berlin C<< <ash@cpan.org> >>
+
+=head1 CONTRIBUTORS
+
+Torsten Raudssus C<< <torsten@raudssus.de> >>
 
 =head1 LICENCE AND COPYRIGHT
 
