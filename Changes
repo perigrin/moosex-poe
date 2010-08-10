@@ -1,5 +1,9 @@
 Revision history for MooseX-POE
 
+0.208 2010-08-10
+    + Added new timer features
+    - Remove AutoInstall reference in Makefile.PL
+
 0.206 2010-07-27
     - Avoid warnings with Moose 1.09 (Dave Rolsky)
     - fix CHILD and PARENT methods (xsawyerx)
