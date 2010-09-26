@@ -12,7 +12,7 @@ around _generate_instance => sub {
     my $orig = shift;
     my ($self, $var, $class_var) = @_;
 
-    my %events = $self->_meta_instance->associated_metaclass->get_all_events;
+    my %events = $self->associated_metaclass->get_all_events;
     $events{STARTALL} = 'STARTALL';
     $events{_stop} = 'STOPALL';
 

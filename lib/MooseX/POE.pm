@@ -1,6 +1,6 @@
 package MooseX::POE;
 
-our $VERSION = '0.208';
+our $VERSION = '0.209';
 
 use Moose ();
 use Moose::Exporter;
@@ -43,7 +43,7 @@ MooseX::POE - The Illicit Love Child of Moose and POE
 
 =head1 VERSION
 
-This document describes MooseX::POE version 0.205
+This document describes MooseX::POE version 0.209
 
 =head1 SYNOPSIS
 
@@ -162,7 +162,6 @@ A cheap alias for the same POE::Kernel function which will gurantee posting to t
 
 =back
 
-
 =head1 NOTES ON USAGE WITH L<MooseX::Declare|MooseX::Declare>
 
 L<MooseX::Declare|MooseX::Declare> support is still "experimental". Meaning that I don't use it,
@@ -206,19 +205,20 @@ Chris Prather  C<< <chris@prather.org> >>
 
 Ash Berlin C<< <ash@cpan.org> >>
 
-Chris Williams C<<chris@bingosnet.co.uk>>
+Chris Williams C<< <chris@bingosnet.co.uk> >>
 
 Yuval (nothingmuch) Kogman 
+
+Torsten Raudssus C<< <getty@cpan.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
 Copyright (c) 2007-2009, Chris Prather C<< <chris@prather.org> >>, Ash Berlin
-C<< <ash@cpan.org> >>, Chris Williams C<<chris@bingosnet.co.uk>>, Yuval
-(nothingmuch) Kogman. Some rights reserved.
+C<< <ash@cpan.org> >>, Chris Williams C<< <chris@bingosnet.co.uk> >>, Yuval
+(nothingmuch) Kogman, Torsten Raudssus C<< <getty@cpan.org> >>. Some rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
-
 
 =head1 DISCLAIMER OF WARRANTY
 

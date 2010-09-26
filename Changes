@@ -1,5 +1,8 @@
 Revision history for MooseX-POE
 
+0.209 2010-09-26
+    + Remove useless call to ->_meta_instance (autarch)
+
 0.208 2010-08-10
     + Added new timer features
     - Remove AutoInstall reference in Makefile.PL
