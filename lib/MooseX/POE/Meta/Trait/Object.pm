@@ -1,4 +1,5 @@
 package MooseX::POE::Meta::Trait::Object;
+# ABSTRACT: The base class role for MooseX::POE
 
 use Moose::Role;
 use POE::Session;
@@ -98,10 +99,6 @@ no Moose::Role;
 
 __END__
 
-=head1 NAME
-
-MooseX::POE::Meta::Trait::Object - The base class role for MooseX::Poe
-
 =head1 SYNOPSIS
 
     package Counter;
@@ -141,107 +138,56 @@ classe (usually Moose::Object) that implements a POE::Session.
 
 =head1 DEFAULT METHODS
 
-=over
-
-=item get_session_id
+=method get_session_id
 
 Get the internal POE Session ID, this is useful to hand to other POE aware
 functions.
 
-=item yield
+=method yield
 
-=item call
+=method call
 
-=item delay
+=method delay
 
-=item alarm
+=method alarm
 
-=item alarm_add
+=method alarm_add
 
-=item delay_add
+=method delay_add
 
-=item alarm_set
+=method alarm_set
 
-=item alarm_adjust
+=method alarm_adjust
 
-=item alarm_remove
+=method alarm_remove
 
-=item alarm_remove_all
+=method alarm_remove_all
 
-=item delay_set
+=method delay_set
 
-=item delay_adjust
+=method delay_adjust
 
 A cheap alias for the same POE::Kernel function which will gurantee posting to the object's session.
 
-=item STARTALL
+=method STARTALL
 
 Along similar lines to Moose's C<BUILDALL> method which calls all the C<BUILD>
 methods, this function will call all the C<START> methods in your inheritance
 hierarchy automatically when POE first runs your session. (This corresponds to
 the C<_start> event from POE.)
 
-=item STOPALL
+=method STOPALL
 
 Along similar lines to C<STARTALL>, but for C<STOP> instead.
 
-=back
-
 =head1 PREDEFINED EVENTS 
 
-=over
+=method START
 
-=item START
+=method STOP
 
-=item STOP
+=method DEFAULT
 
-=item DEFAULT
+=method CHILD
 
-=item CHILD
-
-=item PARENT
-
-=back
-
-
-=head1 AUTHOR
-
-Chris Prather C<< <perigrin@cpan.org> >>
-
-Ash Berlin C<< <ash@cpan.org> >>
-
-=head1 CONTRIBUTORS
-
-Torsten Raudssus C<< <torsten@raudssus.de> >>
-
-=head1 LICENCE AND COPYRIGHT
-
-Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
-C<< <ash@cpan.org> >>. All rights reserved.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
-
-
-=head1 DISCLAIMER OF WARRANTY
-
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
-OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
-YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR, OR CORRECTION.
-
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
-LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
-OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
-THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
+=method PARENT

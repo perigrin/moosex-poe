@@ -3,6 +3,8 @@ use MooseX::POE::Role;
 
 use overload ();
 
+# ABSTRACT: A sane alias attribute for your MooseX::POE objects.
+
 use POE;
 
 has alias => (
@@ -39,16 +41,11 @@ event _update_alias => sub {
 	$kernel->alias_set($alias) if defined $alias;
 };
 
-__PACKAGE__
+__PACKAGE__;
 
 __END__
 
 =pod
-
-=head1 NAME
-
-MooseX::POE::Aliased - A sane C<alias> attribute for your L<MooseX::POE>
-objects.
 
 =head1 SYNOPSIS
 
@@ -71,9 +68,7 @@ value to be set.
 
 =head1 ATTRIBUTES
 
-=over 4
-
-=item alias
+=method alias
 
 The alias to set for the session.
 
@@ -82,8 +77,6 @@ Defaults to the C<overload::StrVal> of the object.
 If the value is set at runtime the alias will be updated in the L<POE::Kernel>.
 
 A value of C<undef> inhibits aliasing.
-
-=back
 
 =cut
 

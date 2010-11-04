@@ -1,4 +1,5 @@
 package MooseX::POE::Meta::Method::State;
+# ABSTRACT: Dont look into this, its boring
 use strict;
 use Moose;
 extends qw(Moose::Meta::Method);

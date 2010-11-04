@@ -1,4 +1,5 @@
 package MooseX::POE::Meta::Role;
+# ABSTRACT: Pay no attention to this.
 use Moose::Role;
 with qw(MooseX::POE::Meta::Trait);
 

@@ -1,4 +1,5 @@
 package MooseX::POE::SweetArgs;
+# ABSTRACT: sugar around MooseX::POE event arguments
 
 use Moose ();
 use MooseX::POE;
@@ -23,10 +24,7 @@ sub init_meta {
 
 
 1;
-
-=head1 NAME
-
-MooseX::POE::SweetArgs - sugar around MooseX::POE event arguments
+__END__
 
 =head1 SYNOPSIS
 
@@ -59,24 +57,5 @@ shown in the synopsis.
 
 In all other respects, this behaves exactly like MooseX::POE
 
-=head1 SEE ALSO
-
-L<MooseX::POE>
-
-=head1 AUTHOR
-
-Chris Prather  C<< <perigrin@cpan.org> >>
-
-Ash Berlin C<< <ash@cpan.org> >>
-
-Hans Dieter Pearcey
-
-=head1 LICENCE AND COPYRIGHT
-
-Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
-C<< <ash@cpan.org> >>. All rights reserved.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
-
-=cut
+=for :list
+* L<MooseX::POE|MooseX::POE>

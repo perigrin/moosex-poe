@@ -1,5 +1,5 @@
 package MooseX::POE::Meta::Trait::Class;
-
+# ABSTRACT: No achmed inside
 use Moose::Role;
 
 with qw(MooseX::POE::Meta::Trait);
@@ -53,38 +53,12 @@ no Moose::Role;
 1;
 __END__
 
-=head1 NAME
-
-MooseX::POE::Meta::Trait::Class
-
-=head1 SYNOPSIS
-
-    use MooseX::POE::Meta::Trait::Constructor;
-
-=head1 DESCRIPTION
-
-The MooseX::POE::Meta::Trait::Constructor class implements ...
-
 =head1 METHODS
 
-=over 
-
-=item get_all_events
-
-=back 
+=method get_all_events
 
 =head1 DEPENDENCIES
 
 Moose::Role
-
-=head1 AUTHOR
-
-Chris Prather (chris@prather.org)
-
-=head1 LICENCE
-
-Copyright 2009 by Chris Prather.
-
-This software is free.  It is licensed under the same terms as Perl itself.
 
 =cut

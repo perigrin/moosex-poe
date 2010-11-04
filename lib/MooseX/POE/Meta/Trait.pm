@@ -1,4 +1,5 @@
 package MooseX::POE::Meta::Trait;
+# ABSTRACT: There be dragons here.
 use Moose::Role;
 
 use MooseX::POE::Meta::Method::State;
@@ -27,8 +28,7 @@ sub add_state_method {
     my ( $self, $name, $method ) = @_;
     if ( $self->has_method($name) ) {
         my $full_name = $self->get_method($name)->fully_qualified_name;
-        confess
-"Cannot add a state method ($name) if a local method ($full_name) is already present";
+        confess "Cannot add a state method ($name) if a local method ($full_name) is already present";
     }
 
     $self->add_event($name);

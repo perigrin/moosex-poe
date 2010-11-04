@@ -1,4 +1,5 @@
 package MooseX::POE::Role;
+# ABSTRACT: Eventful roles
 use MooseX::POE::Meta::Role;
 
 use Moose::Exporter;
@@ -33,10 +34,6 @@ sub event {
 1;
 __END__
 
-=head1 NAME
-
-MooseX::POE::Role - Eventful roles
-
 =head1 SYNOPSIS
 
     package Counter;
@@ -50,35 +47,15 @@ MooseX::POE::Role - Eventful roles
   
 =head1 DESCRIPTION
 
-This is what MooseX::POE is to Moose but with Moose::Role.
+This is what L<MooseX::POE> is to Moose but with L<Moose::Role>.
 
 =head1 KEYWORDS
 
-=over
-
-=item event $name $subref
+=method event $name $subref
 
 Create an event handler named $name. 
 
-=back
-
-=cut
-
-=head1 SEE ALSO
-
-L<MooseX::POE>
-
-=head1 AUTHOR
-
-Chris Prather  C<< <perigrin@cpan.org> >>
-
-Ash Berlin C<< <ash@cpan.org> >>
-
-=head1 LICENCE AND COPYRIGHT
-
-Copyright (c) 2007-2009, Chris Prather C<< <perigrin@cpan.org> >>, Ash Berlin
-C<< <ash@cpan.org> >>. All rights reserved.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
+=for :list
+* L<MooseX::POE|MooseX::POE>
+* L<Moose::Role> 
 

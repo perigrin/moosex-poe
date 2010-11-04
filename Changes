@@ -1,4 +1,7 @@
-Revision history for MooseX-POE
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+    + Switched to Dist::Zilla for the author (Getty)
 
 0.209 2010-09-26
     + Remove useless call to ->_meta_instance (autarch)
