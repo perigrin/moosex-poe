@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.210     2010-11-04 21:48:59 Europe/Berlin
     + Switched to Dist::Zilla for the author (Getty)
 
 0.209 2010-09-26
