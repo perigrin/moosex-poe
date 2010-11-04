@@ -1,9 +1,8 @@
 package MooseX::POE::Aliased;
+# ABSTRACT: A sane alias attribute for your MooseX::POE objects.
 use MooseX::POE::Role;
 
 use overload ();
-
-# ABSTRACT: A sane alias attribute for your MooseX::POE objects.
 
 use POE;
 
