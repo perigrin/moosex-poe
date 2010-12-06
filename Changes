@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.211     2010-12-05 22:17:17 America/New_York
     + Switched to Test::Fatal (perigrin)
 
 0.210     2010-11-04 21:48:59 Europe/Berlin
