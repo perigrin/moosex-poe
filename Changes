@@ -8,86 +8,86 @@ Revision history for {{$dist->name}}
 0.210     2010-11-04 21:48:59 Europe/Berlin
     + Switched to Dist::Zilla for the author (Getty)
 
-0.209 2010-09-26
+0.209     2010-09-26
     + Remove useless call to ->_meta_instance (autarch)
 
-0.208 2010-08-10
+0.208     2010-08-10
     + Added new timer features
     - Remove AutoInstall reference in Makefile.PL
 
-0.206 2010-07-27
+0.206     2010-07-27
     - Avoid warnings with Moose 1.09 (Dave Rolsky)
     - fix CHILD and PARENT methods (xsawyerx)
     - various doc/example/test fixes (Avar, perigrin, Getty)
 
-0.205 2009-06-26
-	- Fix inheritance of events (BinGOs)
-		- Add tests (BinGOs)
-	- Make sure that SENDER in START methods is correct (BinGOs)	
+0.205     2009-06-26
+    - Fix inheritance of events (BinGOs)
+    - Add tests (BinGOs)
+    - Make sure that SENDER in START methods is correct (BinGOs)	
 
-0.204 2009-06-12
-     - remove auto_install at nothingmuch's request
+0.204     2009-06-12
+    - remove auto_install at nothingmuch's request
 
-0.203 2009-05-30
-	+ Add stubbed documentation for metaclasses (perigrin)
-	+ Clean up aliased test to set inline_constructor => 0 (perigrin)
-	+ Update Makefile.PL to include AutoManifest and Repository (perigrin)
-	+ Clean out Object Deferred since it's been broken and nobody noticed (perigrin)
+0.203     2009-05-30
+    + Add stubbed documentation for metaclasses (perigrin)
+    + Clean up aliased test to set inline_constructor => 0 (perigrin)
+    + Update Makefile.PL to include AutoManifest and Repository (perigrin)
+    + Clean out Object Deferred since it's been broken and nobody noticed (perigrin)
 
-0.202 2009-05-11
+0.202     2009-05-11
     + Change alias_method to add_method as that's not been deprecated (perigrin)
     + Clean up the SYNOPSIS a bit, the name attribute was useless.
     + Changes to keep constructor inlining working with latest Moose &
       Class::MOP. This module will still work with any Moose from 0.74
       on up.
 
-0.201 2009-04-02
+0.201     2009-04-02
     + Document the hell out of MooseX::Declare weirdness (perigrin)
     + Update the rest of the documentation including authors and whatnot (perigrin)
 
-0.200 2009-04-02
-  + Fairly substantial re-write of the internals (ash)
+0.200     2009-04-02
+    + Fairly substantial re-write of the internals (ash)
     + Made everything a Metaclass Role / Trait. This will break backwards
-    compatibility with the previous method of using MooseX::POE::SweetArgs. (ash)
+      compatibility with the previous method of using MooseX::POE::SweetArgs. (ash)
     + Now compatible with MooseX::Declare ... in theory ... with tests (ash)
-  + Add example from the POE Cookbook (LordVorp)
+    + Add example from the POE Cookbook (LordVorp)
 
-0.100 2009-01-11
-  + Change to Moose::Exporter
+0.100     2009-01-11
+    + Change to Moose::Exporter
 
-0.090 2008-11-08
-  + add MANIFEST.SKIP 
-  - Remove OSX Files
+0.090     2008-11-08
+    + add MANIFEST.SKIP 
+    - Remove OSX Files
 
-0.080 2008-11-07
-  +add MooseX::POE::SweetArgs metaclass (hdp)
-  +Sessions are no longer leaked because they are only referenced by ID (nothingmuch)
-  +Add MooseX::POE::Role (nothingmuch)
-  +Add MooseX::POE::Aliased role (nothingmuch)
+0.080     2008-11-07
+    + add MooseX::POE::SweetArgs metaclass (hdp)
+    + Sessions are no longer leaked because they are only referenced by ID (nothingmuch)
+    + Add MooseX::POE::Role (nothingmuch)
+    + Add MooseX::POE::Aliased role (nothingmuch)
 
-0.070 2008-02-03
-  +attributes can now be weak_ref=>1 (rjbs)
+0.070     2008-02-03
+    + attributes can now be weak_ref=>1 (rjbs)
 
-0.060 2008-01-25
-  +START now get all the POE arguments again like they used to. (ash)
+0.060     2008-01-25
+    + START now get all the POE arguments again like they used to. (ash)
 
-0.050 2008-01-22
-  +startup calls STARTALL, which calls all STARTS (like BUILDALL, etc.) (rjbs)
-  +fix to the fix for MooseX::Daemonize skipping (Dave Rolsky)
-  +fixing MooseX::Object::Deferred so that it brings in the right metaclass 
-	-- this feature is alpha and has 0 tests YMMV
+0.050     2008-01-22
+    + startup calls STARTALL, which calls all STARTS (like BUILDALL, etc.) (rjbs)
+    + fix to the fix for MooseX::Daemonize skipping (Dave Rolsky)
+    + fixing MooseX::Object::Deferred so that it brings in the right metaclass 
+      -- this feature is alpha and has 0 tests YMMV
 
-0.0.4 2008-01-17
-	(functionally the same as 0.03)
-	+Fix test to skip if MooseX::Daemonize not installed
+0.0.4     2008-01-17
+    (functionally the same as 0.03)
+    + Fix test to skip if MooseX::Daemonize not installed
 
-0.0.3 2008-01-15
-	+fix Synopsis code to close bug #31432 (sproingie)
+0.0.3     2008-01-15
+    + fix Synopsis code to close bug #31432 (sproingie)
 	
-0.0.2 2007-10-23
-	+fix POD
-	+fix tests
+0.0.2     2007-10-23
+    + fix POD
+    + fix tests
 
-0.0.1  Thu Oct 11 16:58:27 2007
-	+Initial release.
+0.0.1     2007-10-11 16:58:27 America/New_York
+    + Initial release.
 
