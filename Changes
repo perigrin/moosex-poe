@@ -12,8 +12,8 @@ Revision history for {{$dist->name}}
     + Remove useless call to ->_meta_instance (autarch)
 
 0.208     2010-08-10
-    + Added new timer features
-    - Remove AutoInstall reference in Makefile.PL
+    + Added new timer features (Getty)
+    - Remove AutoInstall reference in Makefile.PL (Getty)
 
 0.206     2010-07-27
     - Avoid warnings with Moose 1.09 (Dave Rolsky)
@@ -26,7 +26,7 @@ Revision history for {{$dist->name}}
     - Make sure that SENDER in START methods is correct (BinGOs)	
 
 0.204     2009-06-12
-    - remove auto_install at nothingmuch's request
+    - remove auto_install at nothingmuch's request (perigrin)
 
 0.203     2009-05-30
     + Add stubbed documentation for metaclasses (perigrin)
@@ -36,7 +36,7 @@ Revision history for {{$dist->name}}
 
 0.202     2009-05-11
     + Change alias_method to add_method as that's not been deprecated (perigrin)
-    + Clean up the SYNOPSIS a bit, the name attribute was useless.
+    + Clean up the SYNOPSIS a bit, the name attribute was useless. 
     + Changes to keep constructor inlining working with latest Moose &
       Class::MOP. This module will still work with any Moose from 0.74
       on up.
