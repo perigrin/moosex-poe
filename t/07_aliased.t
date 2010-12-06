@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 7;
-use Test::Exception;
+use Test::Fatal;
 
 use POE;
 
@@ -32,7 +32,7 @@ my @log;
         push @log, [ @_[ ARG0 .. $#_ ] ];
     };
 
-    __PACKAGE__->meta->make_immutable(inline_constructor => 0);
+    __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 }
 
 my $foo = Foo->new( alias => "blah" );
@@ -50,7 +50,7 @@ POE::Session->create(
     }
 );
 
-$poe_kernel->run;
+POE::Kernel->run;
 
 is( scalar(@log), 2, "two events" );
 
@@ -73,7 +73,7 @@ POE::Session->create(
     }
 );
 
-$poe_kernel->run;
+POE::Kernel->run;
 
 is( scalar(@log), 2, "two events" );
 
@@ -96,8 +96,8 @@ is_deeply( $log[1], ["that"], "second event under alias 'bar'" );
 
 }
 
-lives_ok { Aliased->new( alias => 'alias' ) }
-'can create Aliased with ASSERT_DEFAULT';
+is( exception { Aliased->new( alias => 'alias' ) },
+    undef, 'can create Aliased with ASSERT_DEFAULT' );
 
-$poe_kernel->run;
+POE::Kernel->run;
 
