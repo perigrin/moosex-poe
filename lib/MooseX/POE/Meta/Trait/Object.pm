@@ -27,7 +27,7 @@ sub new {
     );
     $self->{session_id} = $session->ID;
 
-    $self->BUILDALL($params);
+    $self->BUILDALL($params) if Moose->VERSION < 1.05;
     return $self;
 }
 
