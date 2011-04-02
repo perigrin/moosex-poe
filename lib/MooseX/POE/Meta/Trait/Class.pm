@@ -7,31 +7,6 @@ with qw(MooseX::POE::Meta::Trait);
 # TODO: subclass events to be a hashref that maps the event to the method
 # so we can support on_ events
 
-around new_object => sub {
-    my ( $next, $self, @args ) = @_;
-    my $instance = $next->($self, @args);
-
-    my $session = POE::Session->create(
-        inline_states =>
-            { _start => sub { POE::Kernel->yield('STARTALL') }, },
-        object_states => [
-            $instance => {
-                $self->get_all_events,
-                STARTALL => 'STARTALL',
-                _stop    => 'STOPALL',
-                _child   => 'CHILD',
-                _parent  => 'PARENT',
-                _call_kernel_with_my_session => '_call_kernel_with_my_session',
-            },
-        ],
-        args => [$instance],
-        heap => ( $instance->{heap} ||= {} ),
-    );
-    $instance->{session_id} = $session->ID;
-
-    return $instance;
-};
-
 around default_events => sub {
     my ( $next, $self ) = @_;
     my $events = $next->($self);

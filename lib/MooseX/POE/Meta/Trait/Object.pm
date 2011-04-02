@@ -4,6 +4,28 @@ package MooseX::POE::Meta::Trait::Object;
 use Moose::Role;
 use POE::Session;
 
+sub BUILD {
+    my $self = shift;
+
+    my $session = POE::Session->create(
+        inline_states =>
+            { _start => sub { POE::Kernel->yield('STARTALL') }, },
+        object_states => [
+            $self => {
+                $self->meta->get_all_events,
+                STARTALL => 'STARTALL',
+                _stop    => 'STOPALL',
+                _child   => 'CHILD',
+                _parent  => 'PARENT',
+                _call_kernel_with_my_session => '_call_kernel_with_my_session',
+            },
+        ],
+        args => [$self],
+        heap => ( $self->{heap} ||= {} ),
+    );
+    $self->{session_id} = $session->ID;
+}
+
 sub get_session_id {
     my ($self) = @_;
     return $self->meta->get_meta_instance->get_session_id($self);
