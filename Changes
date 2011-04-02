@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Fix for double BUILD (doy)
 
 0.211     2010-12-05 22:17:17 America/New_York
     + Switched to Test::Fatal (perigrin)
