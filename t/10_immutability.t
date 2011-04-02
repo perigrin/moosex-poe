@@ -1,4 +1,3 @@
-use Test::More skip_all => 'Moose upstream needs to sort out immutability';
 use Test::More tests => 2;
 
 {

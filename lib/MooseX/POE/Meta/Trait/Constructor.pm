@@ -3,12 +3,6 @@ package MooseX::POE::Meta::Trait::Constructor;
 
 use Moose::Role;
 
-# For CMOP 0.82_01+
-sub _expected_method_class { "MooseX::POE::Meta::Trait::Object" }
-
-# For older versions of Moose/CMOP
-sub _expected_constructor_class { "MooseX::POE::Meta::Trait::Object" }
-
 around _generate_instance => sub {
     my $orig = shift;
     my ($self, $var, $class_var) = @_;
