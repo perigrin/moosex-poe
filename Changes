@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Fix for a regression introduced with the removal of MooseX::POE::Meta::Trait::Constructor (BinGOs)
 
 0.212     2011-04-02 20:53:13 Europe/Berlin
     - Fix for double BUILD (doy)
