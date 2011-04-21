@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.213     2011-04-21 18:09:51 Europe/Berlin
     - Fix for a regression introduced with the removal of MooseX::POE::Meta::Trait::Constructor (BinGOs)
 
 0.212     2011-04-02 20:53:13 Europe/Berlin
