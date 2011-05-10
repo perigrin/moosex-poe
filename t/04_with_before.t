@@ -1,4 +1,4 @@
-use strict;
+use strict; use warnings;
 use Test::More skip_all => 'Moose upstream needs to sort out composition';
 
 use Test::More tests => 3;

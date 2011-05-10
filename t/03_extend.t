@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use strict;
+use strict; use warnings;
 use Test::More tests => 6;
 
 my ($base_start_called, $extended_start_called);

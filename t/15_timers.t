@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-
+use strict; use warnings;
 use Test::More;
 
 my $right_cnt = 0;

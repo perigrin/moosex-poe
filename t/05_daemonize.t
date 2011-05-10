@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use strict;
+use strict; use warnings;
 use Test::More;
 eval "use MooseX::Daemonize";
 plan skip_all => "MooseX::Daemonize not installed; skipping" if $@;

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use strict;
+use strict; use warnings;
 use Test::More;
 my $mem_cycle = eval { require Test::Memory::Cycle } || 0;
 my $num_objs = 10;
