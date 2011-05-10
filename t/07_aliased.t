@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 6;
 use Test::Fatal;
 
 use POE;
@@ -79,25 +79,4 @@ is( scalar(@log), 2, "two events" );
 
 is_deeply( $log[0], ["this"], "first event under alias 'blah'" );
 is_deeply( $log[1], ["that"], "second event under alias 'bar'" );
-
-{
-    no warnings 'redefine';
-    sub POE::Kernel::ASSERT_DEFAULT () { 1 }
-
-    package Aliased;
-    use MooseX::POE;
-
-    with qw/MooseX::POE::Aliased/;
-
-    has foo => ( is => 'rw', isa => 'Str', default => '' );
-    has bar => ( is => 'rw', isa => 'Int', default => 0 );
-
-    no MooseX::POE;
-
-}
-
-is( exception { Aliased->new( alias => 'alias' ) },
-    undef, 'can create Aliased with ASSERT_DEFAULT' );
-
-POE::Kernel->run;
 

@@ -14,16 +14,20 @@ has alias => (
     predicate   => "has_alias",
     trigger => sub {
         my ( $self, $alias ) = @_;
+
+        # we cannot set the alias UNTIL we construct the object!
+        # or ASSERT_DEFAULT will complain...
+        return unless defined $self->get_session_id;
         $self->call( _update_alias => $alias );
     }
 );
 
-sub BUILD {
+before 'STARTALL' => sub {
     my ($self) = @_;
 
     $self->call( _update_alias => $self->alias )
       if $self->has_alias;
-}
+};
 
 sub _build_alias {
     my $self = shift;
@@ -35,9 +39,10 @@ event _update_alias => sub {
 
     # we need to remove the prev alias like this because we don't know the
     # previous value.
-    $kernel->alarm_remove_all();
+    $kernel->alias_remove($_) for $kernel->alias_list( $self->get_session_id );
+    $kernel->alias_set($alias) if defined $alias;
 
-	$kernel->alias_set($alias) if defined $alias;
+    return;
 };
 
 __PACKAGE__;
