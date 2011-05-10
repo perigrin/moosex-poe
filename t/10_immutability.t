@@ -1,3 +1,4 @@
+use strict; use warnings;
 use Test::More tests => 2;
 
 {
@@ -9,7 +10,7 @@ use Test::More tests => 2;
 
     sub START {
         my ( $kernel, $self ) = @_[ KERNEL, OBJECT ];
-        diag "Starting .... \n";
+        diag "Starting .... \n" if $ENV{TEST_VERBOSE};
         $kernel->yield('counter_event');
         return;
     }
@@ -36,7 +37,7 @@ use Test::More tests => 2;
 
     sub START {
         my ( $kernel, $self ) = @_[ KERNEL, OBJECT ];
-        diag "Starting EXTENSION .... \n";
+        diag "Starting EXTENSION .... \n" if $ENV{TEST_VERBOSE};
         $kernel->yield('counter_event');
         return;
     }
