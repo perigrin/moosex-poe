@@ -9,7 +9,7 @@ around add_state_method => sub {
   $orig->($self, $name, sub {
     $method->(@_[POE::Session::OBJECT(), POE::Session::ARG0()..$#_])
   });
-}; 
+};
 
 no Moose::Role;
 

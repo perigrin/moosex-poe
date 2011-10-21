@@ -68,24 +68,24 @@ or with L<MooseX::Declare|MooseX::Declare>:
 
     class Counter {
         use MooseX::POE::SweetArgs qw(event);
-        
+
         has count => (
             isa     => 'Int',
             is      => 'rw',
             lazy    => 1,
             default => sub { 0 },
         );
-        
-        sub START { 
+
+        sub START {
             my ($self) = @_;
-            $self->yield('increment')  
+            $self->yield('increment')
         }
-        
+
         event increment => sub {
             my ($self) = @_;
             print "Count is now " . $self->count . "\n";
             $self->count( $self->count + 1 );
-            $self->yield('increment') unless $self->count > 3;            
+            $self->yield('increment') unless $self->count > 3;
         }
     }
 
@@ -100,7 +100,7 @@ MooseX::POE is a L<Moose> wrapper around a L<POE::Session>.
 
 =method event $name $subref
 
-Create an event handler named $name. 
+Create an event handler named $name.
 
 =head1 METHODS
 
@@ -149,9 +149,9 @@ A cheap alias for the same POE::Kernel function which will gurantee posting to t
 L<MooseX::Declare|MooseX::Declare> support is still "experimental". Meaning that I don't use it,
 I don't have any code that uses it, and thus I can't adequately say that it
 won't cause monkeys to fly out of any orifices on your body beyond what the
-tests and the SYNOPSIS cover. 
+tests and the SYNOPSIS cover.
 
-That said there are a few caveats that have turned up during testing. 
+That said there are a few caveats that have turned up during testing.
 
 1. The C<method> keyword doesn't seem to work as expected. This is an
 integration issue that is being resolved but I want to wait for
@@ -167,7 +167,7 @@ handles. To work around this you'll need to write:
     use MooseX::POE qw(event);
     # or
     use MooseX::POE::SweetArgs qw(event);
-    # or 
+    # or
     use MooseX::POE::Role qw(event);
 
 to keep MooseX::POE from exporting the sugar that
@@ -178,6 +178,6 @@ writing) is not on the CPAN.
 =head1 SEE ALSO
 
 =for :list
-* L<Moose|Moose> 
+* L<Moose|Moose>
 * L<POE|POE>
 

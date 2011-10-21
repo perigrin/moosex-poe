@@ -11,7 +11,7 @@ my $wrong_cnt = 0;
 	package Test::MooseX::POE::Timers::Doer;
 
 	use MooseX::POE;
-	
+
 	event 'tick' => sub {
 		my ( $self ) = @_;
 		$right_cnt++;
@@ -51,7 +51,7 @@ my $wrong_cnt = 0;
 		$doer->delay( 'tick' => 1 );
 		$doer->outside_self_delay;
 	}
-	
+
 	event 'tick' => sub {
 		$wrong_cnt++;
 	};

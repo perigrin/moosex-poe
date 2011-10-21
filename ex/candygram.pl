@@ -54,12 +54,12 @@ sub main {
     $proc->send('land_shark');
     $proc->send('candygram');
     POE::Kernel->run;    # we have to run the kernel manually
-    
+
 }
 
-# 
+#
 # Implementation
-# 
+#
 
 {
 
@@ -101,7 +101,7 @@ sub main {
         $self->handlers->{$state} = $code;
     }
 
-#   This could be cleaned up a bunch by MooseX::AttributeHelpers on the 
+#   This could be cleaned up a bunch by MooseX::AttributeHelpers on the
 #   attributes above, but I didn't wan't to have a dependency
 #   for a example script
 

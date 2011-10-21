@@ -87,7 +87,7 @@ __PACKAGE__->meta->add_method(
 __PACKAGE__->meta->add_method(
     _parent => __PACKAGE__->meta->get_method('PARENT') )
     if __PACKAGE__->meta->has_method('PARENT');
-	
+
 no Moose::Role;
 
 1;
@@ -125,7 +125,7 @@ __END__
 
     no MooseX::Poe;
 
-  
+
 =head1 DESCRIPTION
 
 MooseX::POE::Meta::TraitObject is a role that is applied to the object base
@@ -175,7 +175,7 @@ the C<_start> event from POE.)
 
 Along similar lines to C<STARTALL>, but for C<STOP> instead.
 
-=head1 PREDEFINED EVENTS 
+=head1 PREDEFINED EVENTS
 
 =method START
 
