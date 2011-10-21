@@ -44,7 +44,7 @@ __END__
     package RealCounter;
 
     with qw(Counter);
-  
+
 =head1 DESCRIPTION
 
 This is what L<MooseX::POE> is to Moose but with L<Moose::Role>.
@@ -53,9 +53,9 @@ This is what L<MooseX::POE> is to Moose but with L<Moose::Role>.
 
 =method event $name $subref
 
-Create an event handler named $name. 
+Create an event handler named $name.
 
 =for :list
 * L<MooseX::POE|MooseX::POE>
-* L<Moose::Role> 
+* L<Moose::Role>
 

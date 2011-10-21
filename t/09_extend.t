@@ -7,7 +7,7 @@ my ($base_start_called, $extended_start_called);
   package Base;
   use MooseX::POE;
 
-  sub START { 
+  sub START {
     # Do this rather than embedd ::ok(1) here so ath get proper failing reports
     ::pass('Base Start');
     $base_start_called = 1;

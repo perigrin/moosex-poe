@@ -45,18 +45,18 @@ __END__
 
     Moose::Util::MetaRole::apply_metaclass_roles(
       for_class => $for_class,
-      metaclass_roles => [ 
-        'MooseX::POE::Meta::Trait::Class' 
+      metaclass_roles => [
+        'MooseX::POE::Meta::Trait::Class'
       ],
       instance_metaclass_roles => [
         'MooseX::POE::Meta::Trait::Instance',
       ],
     );
 
-  
+
 =head1 DESCRIPTION
 
-A metaclass for MooseX::POE. This module is only of use to developers 
+A metaclass for MooseX::POE. This module is only of use to developers
 so there is no user documentation provided.
 
 =head1 METHODS

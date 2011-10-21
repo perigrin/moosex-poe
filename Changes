@@ -32,7 +32,7 @@ Revision history for {{$dist->name}}
 0.205     2009-06-26
     - Fix inheritance of events (BinGOs)
     - Add tests (BinGOs)
-    - Make sure that SENDER in START methods is correct (BinGOs)	
+    - Make sure that SENDER in START methods is correct (BinGOs)
 
 0.204     2009-06-12
     - remove auto_install at nothingmuch's request (perigrin)
@@ -45,7 +45,7 @@ Revision history for {{$dist->name}}
 
 0.202     2009-05-11
     + Change alias_method to add_method as that's not been deprecated (perigrin)
-    + Clean up the SYNOPSIS a bit, the name attribute was useless. 
+    + Clean up the SYNOPSIS a bit, the name attribute was useless.
     + Changes to keep constructor inlining working with latest Moose &
       Class::MOP. This module will still work with any Moose from 0.74
       on up.
@@ -65,7 +65,7 @@ Revision history for {{$dist->name}}
     + Change to Moose::Exporter
 
 0.090     2008-11-08
-    + add MANIFEST.SKIP 
+    + add MANIFEST.SKIP
     - Remove OSX Files
 
 0.080     2008-11-07
@@ -83,7 +83,7 @@ Revision history for {{$dist->name}}
 0.050     2008-01-22
     + startup calls STARTALL, which calls all STARTS (like BUILDALL, etc.) (rjbs)
     + fix to the fix for MooseX::Daemonize skipping (Dave Rolsky)
-    + fixing MooseX::Object::Deferred so that it brings in the right metaclass 
+    + fixing MooseX::Object::Deferred so that it brings in the right metaclass
       -- this feature is alpha and has 0 tests YMMV
 
 0.0.4     2008-01-17
@@ -92,7 +92,7 @@ Revision history for {{$dist->name}}
 
 0.0.3     2008-01-15
     + fix Synopsis code to close bug #31432 (sproingie)
-	
+
 0.0.2     2007-10-23
     + fix POD
     + fix tests

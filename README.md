@@ -39,7 +39,7 @@ or with L<MooseX::Declare|MooseX::Declare>:
 
     class Counter {
         use MooseX::POE::SweetArgs qw(event);
-        
+
 
         has count => (
             isa     => 'Int',
@@ -47,19 +47,19 @@ or with L<MooseX::Declare|MooseX::Declare>:
             lazy    => 1,
             default => sub { 0 },
         );
-        
 
-        sub START { 
+
+        sub START {
             my ($self) = @_;
-            $self->yield('increment')  
+            $self->yield('increment')
         }
-        
+
 
         event increment => sub {
             my ($self) = @_;
             print "Count is now " . $self->count . "\n";
             $self->count( $self->count + 1 );
-            $self->yield('increment') unless $self->count > 3;            
+            $self->yield('increment') unless $self->count > 3;
         }
     }
 
@@ -74,7 +74,7 @@ MooseX::POE is a Moose wrapper around a POE::Session.
 
 - event $name $subref
 
-Create an event handler named $name. 
+Create an event handler named $name.
 
 # METHODS
 
@@ -100,9 +100,9 @@ of methods on that class so you know what to look for:
 L<MooseX::Declare|MooseX::Declare> support is still "experimental". Meaning that I don't use it,
 I don't have any code that uses it, and thus I can't adequately say that it
 won't cause monkeys to fly out of any orifices on your body beyond what the
-tests and the SYNOPSIS cover. 
+tests and the SYNOPSIS cover.
 
-That said there are a few caveats that have turned up during testing. 
+That said there are a few caveats that have turned up during testing.
 
 1. The `method` keyword doesn't seem to work as expected. This is an
 integration issue that is being resolved but I want to wait for
@@ -118,7 +118,7 @@ handles. To work around this you'll need to write:
     use MooseX::POE qw(event);
     # or
     use MooseX::POE::SweetArgs qw(event);
-    # or 
+    # or
     use MooseX::POE::Role qw(event);
 
 to keep MooseX::POE from exporting the sugar that
@@ -128,7 +128,7 @@ writing) is not on the CPAN.
 
 # DEPENDENCIES
 
-L<Moose|Moose> 
+L<Moose|Moose>
 
 L<POE|POE>
 
@@ -140,7 +140,7 @@ Ash Berlin `<ash@cpan.org>`
 
 Chris Williams `<chris@bingosnet.co.uk`>
 
-Yuval (nothingmuch) Kogman 
+Yuval (nothingmuch) Kogman
 
 # LICENCE AND COPYRIGHT
 

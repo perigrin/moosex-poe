@@ -100,11 +100,11 @@ sub main {
     event loop => sub {
         my ( $self, $sender, $chunk ) = @_;
         my $guard = $self->guard;
-        
-        ### This doesn't return until after we have exited 
+
+        ### This doesn't return until after we have exited
         ### this is probably a priority issue but I can't seem to sort it
         ### Coro is a PITA
-        
+
         my $count = Coro::Util::fork_eval {
             my %count;
             for my $line (@$chunk) {
