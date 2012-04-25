@@ -12,7 +12,7 @@ Moose::Exporter->setup_import_methods(
 
 sub init_meta {
     my ($class, %args) = @_;
-    MooseX::POE->init_meta(%args);
+    MooseX::POE->import({ into => $args{for_class} });
 
     Moose::Util::MetaRole::apply_metaroles(
         for             => $args{for_class},
