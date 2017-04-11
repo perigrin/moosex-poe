@@ -9,7 +9,7 @@ sub BUILD {
 
     my $session = POE::Session->create(
         inline_states =>
-            { _start => sub { POE::Kernel->yield('STARTALL', \$_[5] ) }, },
+            { _start => sub { POE::Kernel->yield('STARTALL', $_[5] ) }, },
         object_states => [
             $self => {
                 $self->meta->get_all_events,
